@@ -1,0 +1,60 @@
+<?php
+
+namespace App\Livewire;
+
+use App\Models\Orcamento;
+use App\Notifications\OrcamentoAprovadoNotification;
+use Livewire\Component;
+
+class PublicOrcamentoView extends Component
+{
+    public Orcamento $orcamento;
+    public int $parcelas = 2;
+
+    public function mount(Orcamento $orcamento)
+    {
+        $this->orcamento = $orcamento;
+    }
+
+    public function aprovarOrcamento()
+    {
+        if ($this->orcamento->status === 'Analisando') {
+            $this->orcamento->status = 'Aprovado';
+            $this->orcamento->save();
+
+            $this->orcamento->user->notify(new OrcamentoAprovadoNotification($this->orcamento));
+            $this->dispatch('new-alert-sent');
+            $this->dispatch('status-atualizado', $this->orcamento->id);
+            session()->flash('success', 'Orçamento aprovado com sucesso!');
+            session()->flash('undo_action', 'Você aprovou a proposta.');
+        }
+    }
+
+    public function rejeitarOrcamento()
+    {
+        if ($this->orcamento->status === 'Analisando') {
+            $this->orcamento->status = 'Rejeitado';
+            $this->orcamento->save();
+            $this->dispatch('status-atualizado', $this->orcamento->id);
+            session()->flash('success', 'Orçamento rejeitado.');
+            session()->flash('undo_action', 'Você rejeitou a proposta.');
+        }
+    }
+
+    public function revertStatus()
+    {
+        if ($this->orcamento->status !== 'Analisando') {
+            $this->orcamento->status = 'Analisando';
+            $this->orcamento->save();
+            $this->dispatch('status-atualizado', $this->orcamento->id);
+            session()->flash('success', 'Ação desfeita com sucesso!');
+            session()->forget('undo_action');
+        }
+    }
+
+    public function render()
+    {
+        return view('livewire.public-orcamento-view')
+               ->layout('layouts.public'); 
+    }
+}

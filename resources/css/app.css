@@ -1,0 +1,128 @@
+@import 'flatpickr/dist/flatpickr.min.css';
+@import "tom-select/dist/css/tom-select.bootstrap5.css";
+@import 'trix/dist/trix.css';
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Correção para o z-index e aparência do Tom Select
+*/
+.ts-dropdown {
+    z-index: 50;
+    background-color: white;
+    border: 1px solid #d1d5db; /* Cor de borda cinza claro */
+    border-radius: 0.5rem; /* Cantos arredondados */
+    margin-top: 0.25rem; /* Um pequeno espaço para "respirar" */
+}
+
+/* Regra específica para o MODO ESCURO (Dark Mode) */
+.dark .ts-dropdown {
+    background-color: #1f2937; /* Cor de fundo cinza escuro (gray-800 do Tailwind) */
+    border-color: #4b5563; /* Cor de borda cinza mais escura (gray-600 do Tailwind) */
+}
+/*
+ * Estilo customizado para as novas tags criadas no Tom Select
+*/
+.ts-control .item.create {
+    background-color: #16a34a; /* Um verde mais forte (green-600 do Tailwind) */
+}
+
+.dark .ts-control .item.create {
+    background-color: #22c55e; /* Um verde mais claro para o modo escuro (green-500) */
+}
+/* ... (seu CSS existente) ... */
+
+/* ESTILOS PARA O TOM-SELECT */
+.ts-control {
+    background-color: #f3f4f6 !important; /* bg-gray-100 */
+    border: none !important;
+    border-radius: 0.5rem !important; /* rounded-lg */
+    padding: 0.625rem !important; /* p-2.5 */
+}
+.dark .ts-control {
+    background-color: #1f2937 !important; /* dark:bg-gray-800 */
+}
+.ts-control.focus {
+    box-shadow: 0 0 0 2px #3b82f6 !important; /* focus:ring-2 focus:ring-blue-500 */
+}
+.ts-dropdown, .ts-dropdown .create {
+    background-color: #ffffff !important;
+}
+.dark .ts-dropdown, .dark .ts-dropdown .create {
+    background-color: #374151 !important;
+    border-color: #4b5563 !important;
+}
+.dark .ts-dropdown .option {
+    color: #d1d5db;
+}
+
+/* Estilo para TAGS EXISTENTES (Verde) */
+.ts-control .item.item-existing {
+    background-color: #d1fae5 !important; /* green-100 */
+    color: #065f46 !important; /* green-800 */
+}
+.dark .ts-control .item.item-existing {
+    background-color: #064e3b !important; /* dark:green-800 */
+    color: #a7f3d0 !important; /* dark:green-300 */
+}
+
+/* Estilo para TAGS NOVAS (Vermelho) */
+.ts-control .item.item-new {
+    background-color: #fee2e2 !important; /* red-100 */
+    color: #991b1b !important; /* red-800 */
+}
+.dark .ts-control .item.item-new {
+    background-color: #7f1d1d !important; /* dark:red-800 */
+    color: #fecaca !important; /* dark:red-300 */
+}
+/* ESTILO DE FOCO GLOBAL PARA FORMULÁRIOS
+  Esta regra aplica um "anel" suave a todos os inputs, textareas e selects
+  quando eles estão em foco, substituindo o outline azul padrão do navegador.
+*/
+@layer base {
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus,
+    input[type="number"]:focus,
+    input[type="url"]:focus,
+    textarea:focus,
+    select:focus {
+        @apply ring-2 ring-blue-500 border-transparent;
+    }
+
+    .dark input[type="text"]:focus,
+    .dark input[type="email"]:focus,
+    .dark input[type="password"]:focus,
+    .dark input[type="number"]:focus,
+    .dark input[type="url"]:focus,
+    .dark textarea:focus,
+    .dark select:focus {
+        @apply ring-blue-400;
+    }
+}
+
+/* Scrollbar cross-browser leve e elegante */
+.nice-scroll {
+  scrollbar-width: thin;            /* Firefox */
+  scrollbar-color: #9CA3AF #F3F4F6; /* thumb, track */
+}
+
+/* Chrome/Edge/Safari */
+.nice-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.nice-scroll::-webkit-scrollbar-track {
+  background: #F3F4F6;              /* slate-100 */
+}
+.nice-scroll::-webkit-scrollbar-thumb {
+  background-color: #9CA3AF;        /* gray-400 */
+  border-radius: 9999px;
+  border: 2px solid #F3F4F6;
+}
+.nice-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #6B7280;        /* gray-500 */
+}
