@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use Spatie\Activitylog\Traits\LogsActivity; 
 use Spatie\Activitylog\LogOptions;          
 use Illuminate\Database\Eloquent\Relations\HasOne; // 1. Adicione este import
+use App\Models\Trabalho;
 
 class Orcamento extends Model
 {
@@ -119,6 +120,35 @@ class Orcamento extends Model
         public function portfolio(): HasOne
         {
             return $this->hasOne(Portfolio::class);
+        }
+        
+        /**
+         * Define o relacionamento: um Orçamento TEM MUITOS Trabalhos.
+         */
+        public function trabalhos(): HasMany
+        {
+            return $this->hasMany(Trabalho::class);
+        }
+        
+        /**
+         * Accessor para calcular a data de fim do orçamento.
+         * Baseado em data_inicio_projeto + prazo_entrega_dias.
+         * Se data_inicio_projeto for null, usa data_validade como fallback.
+         */
+        public function getDataFimAttribute()
+        {
+            // Se temos data de início e prazo de entrega, calculamos a data fim
+            if ($this->data_inicio_projeto && $this->prazo_entrega_dias) {
+                return $this->data_inicio_projeto->addDays($this->prazo_entrega_dias);
+            }
+            
+            // Fallback para data_validade se disponível
+            if ($this->data_validade) {
+                return $this->data_validade;
+            }
+            
+            // Se não temos nenhuma data, retorna null
+            return null;
         }
     
 }

@@ -19,6 +19,7 @@ use App\Livewire\Portfolio\Pipeline;
 use App\Livewire\Portfolio\PortfolioForm;
 use App\Livewire\Portfolio\PortfolioList;
 use App\Http\Controllers\NotificationController;
+use App\Livewire\KanbanBoard;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -54,8 +55,8 @@ Route::post('/api/contato', [App\Http\Controllers\PortfolioContactController::cl
 // Grupo de rotas que exigem que o usuário esteja autenticado
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // Rotas de usuário comum
-    Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    // Rotas de usuário comum - Dashboard simples
+    Route::get('/dashboard', [App\Http\Controllers\DashboardSimplesController::class, 'index'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');// Adicione esta rota para a ação de desfazer
@@ -86,6 +87,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/portfolio/trabalhos/novo/{orcamento_id?}', PortfolioForm::class)->name('portfolio.create');
             Route::get('/portfolio/trabalhos/{portfolio}/editar', PortfolioForm::class)->name('portfolio.edit');
             Route::get('/portfolio/trabalhos', PortfolioList::class)->name('portfolio.index');
+            
+            // Rota do Kanban de Trabalhos
+            Route::get('/kanban', KanbanBoard::class)->name('kanban.index');
         });
         
 
@@ -105,6 +109,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/search/autores', [AutorController::class, 'search'])->name('search.autores');
         });
 
+        // Rota do Dashboard Simples (admin)
+        Route::get('/dashboard-simples', [App\Http\Controllers\DashboardSimplesController::class, 'index'])->name('admin.dashboard.simples');
+        
         // Rotas da API de Notificações
         Route::prefix('api/notifications')->name('api.notifications.')->group(function () {
             Route::get('/', [NotificationController::class, 'index'])->name('index');
@@ -117,6 +124,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/stats', [NotificationController::class, 'getStats'])->name('stats');
             Route::get('/{id}/actions', [NotificationController::class, 'getActions'])->name('actions');
         });
+        
+        // Remover APIs do Dashboard Personalizável - não são mais necessárias
     });
 });
 

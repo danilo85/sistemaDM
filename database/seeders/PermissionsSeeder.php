@@ -22,6 +22,7 @@ class PermissionsSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'acessar_financeiro']);
         Permission::firstOrCreate(['name' => 'acessar_clientes']);
         Permission::firstOrCreate(['name' => 'acessar_autores']);
+        Permission::firstOrCreate(['name' => 'acessar_portfolio']);
         Permission::firstOrCreate(['name' => 'gerenciar_usuarios']); // A permissão mais importante
 
         // --- Criação das Funções (os "conjuntos de chaves") ---
@@ -33,6 +34,7 @@ class PermissionsSeeder extends Seeder
             'acessar_financeiro',
             'acessar_clientes',
             'acessar_autores',
+            'acessar_portfolio',
         ]);
 
         // Função de Admin (tem todas as permissões)

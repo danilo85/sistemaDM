@@ -1,25 +1,26 @@
-<div class="relative" x-data="{ open: <?php if ((object) ('showDropdown') instanceof \Livewire\WireDirective) : ?>window.Livewire.find('<?php echo e($__livewire->getId()); ?>').entangle('<?php echo e('showDropdown'->value()); ?>')<?php echo e('showDropdown'->hasModifier('live') ? '.live' : ''); ?><?php else : ?>window.Livewire.find('<?php echo e($__livewire->getId()); ?>').entangle('<?php echo e('showDropdown'); ?>')<?php endif; ?>, settings: <?php if ((object) ('showSettings') instanceof \Livewire\WireDirective) : ?>window.Livewire.find('<?php echo e($__livewire->getId()); ?>').entangle('<?php echo e('showSettings'->value()); ?>')<?php echo e('showSettings'->hasModifier('live') ? '.live' : ''); ?><?php else : ?>window.Livewire.find('<?php echo e($__livewire->getId()); ?>').entangle('<?php echo e('showSettings'); ?>')<?php endif; ?> }">
-    <!-- Botão do Sino -->
-    <button 
-        @click="open = !open" 
-        class="relative p-2 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg transition-colors duration-200"
-        :class="{ 'text-blue-600': open }"
-    >
-        <!-- Ícone de Sino -->
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-        </svg>
-        
-        <!-- Badge de contagem -->
-        <!--[if BLOCK]><![endif]--><?php if($unreadCount > 0): ?>
-            <span class="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center min-w-[1.125rem] h-[1.125rem] text-xs font-bold leading-none text-white bg-red-500 rounded-full">
-                <?php echo e($unreadCount > 99 ? '99+' : $unreadCount); ?>
+<div class="flex items-center space-x-3">
+    <div class="relative" x-data="{ open: <?php if ((object) ('showDropdown') instanceof \Livewire\WireDirective) : ?>window.Livewire.find('<?php echo e($__livewire->getId()); ?>').entangle('<?php echo e('showDropdown'->value()); ?>')<?php echo e('showDropdown'->hasModifier('live') ? '.live' : ''); ?><?php else : ?>window.Livewire.find('<?php echo e($__livewire->getId()); ?>').entangle('<?php echo e('showDropdown'); ?>')<?php endif; ?>, settings: <?php if ((object) ('showSettings') instanceof \Livewire\WireDirective) : ?>window.Livewire.find('<?php echo e($__livewire->getId()); ?>').entangle('<?php echo e('showSettings'->value()); ?>')<?php echo e('showSettings'->hasModifier('live') ? '.live' : ''); ?><?php else : ?>window.Livewire.find('<?php echo e($__livewire->getId()); ?>').entangle('<?php echo e('showSettings'); ?>')<?php endif; ?> }">
+        <!-- Botão do Sino -->
+        <button 
+            @click="open = !open" 
+            class="relative p-2 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg transition-colors duration-200"
+            :class="{ 'text-blue-600': open }"
+        >
+            <!-- Ícone de Sino -->
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+            </svg>
+            
+            <!-- Badge de contagem -->
+            <!--[if BLOCK]><![endif]--><?php if($unreadCount > 0): ?>
+                <span class="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center min-w-[1.125rem] h-[1.125rem] text-xs font-bold leading-none text-white bg-red-500 rounded-full">
+                    <?php echo e($unreadCount > 99 ? '99+' : $unreadCount); ?>
 
-            </span>
-        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-    </button>
+                </span>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        </button>
 
-    <!-- Dropdown de Notificações -->
+        <!-- Dropdown de Notificações -->
     <div 
         x-show="open" 
         x-transition:enter="transition ease-out duration-200"

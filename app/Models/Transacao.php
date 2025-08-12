@@ -20,6 +20,7 @@ class Transacao extends Model
         'tipo',
         'categoria_id',
         'pago',
+        'status',
         'transacionavel_id',
         'transacionavel_type',
         'compra_id',

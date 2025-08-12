@@ -38,7 +38,6 @@
     <div x-data="{ 
             // Lógica da Sidebar
             sidebarOpen: false, 
-            sidebarCollapsed: window.innerWidth >= 1024 ? (localStorage.getItem('sidebarCollapsed') === 'true') : false,
             isMobile: window.innerWidth < 1024,
             
             // Lógica da Notificação Toast
@@ -85,11 +84,8 @@
          }" 
          x-init="
             // Lógica da Sidebar
-            $watch('sidebarCollapsed', val => { if (!isMobile) { localStorage.setItem('sidebarCollapsed', val); } });
             window.addEventListener('resize', () => {
                 isMobile = window.innerWidth < 1024;
-                if (isMobile) { sidebarCollapsed = false; } 
-                else { sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true'; }
             });
             
             // Listeners para as notificações TOAST
@@ -124,11 +120,9 @@
         
         <div :class="{
                 'translate-x-0 ease-out': sidebarOpen,
-                '-translate-x-full ease-in': !sidebarOpen,
-                'w-16': sidebarCollapsed && !sidebarOpen && !isMobile,
-                'w-64': !sidebarCollapsed || sidebarOpen || isMobile
+                '-translate-x-full ease-in': !sidebarOpen
              }" 
-             class="fixed inset-y-0 left-0 z-30 overflow-y-auto transition-all duration-300 transform bg-white dark:bg-gray-800 lg:translate-x-0 lg:static lg:inset-0">
+             class="fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition-all duration-300 transform bg-white dark:bg-gray-800 lg:translate-x-0 lg:static lg:inset-0">
             @include('layouts.sidebar')
         </div>
 

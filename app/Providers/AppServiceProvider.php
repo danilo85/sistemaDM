@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Carbon\Carbon; 
 use Illuminate\Pagination\Paginator; 
 use Illuminate\Support\Facades\App;
+use App\Models\Orcamento;
+use App\Observers\OrcamentoObserver;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -26,5 +28,8 @@ class AppServiceProvider extends ServiceProvider
         Carbon::setLocale(config('app.locale'));
         App::setLocale('pt_BR');
         Paginator::useTailwind(); // <-- Adicione esta linha
+        
+        // Registrar observers
+        Orcamento::observe(OrcamentoObserver::class);
     }
 }

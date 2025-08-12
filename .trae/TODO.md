@@ -1,7 +1,8 @@
 # TODO:
 
-- [x] 45: Verificar se o evento 'link-copiado' está sendo disparado corretamente pelo método compartilharExtrato() (priority: High)
-- [x] 46: Testar se o JavaScript está capturando o evento corretamente no componente Cliente360 (priority: High)
-- [x] 47: Verificar se navigator.clipboard.writeText() está funcionando e se há problemas de permissão (priority: High)
-- [x] 48: Verificar se as classes CSS para animação estão sendo aplicadas corretamente (priority: Medium)
-- [x] 49: Testar a funcionalidade completa do botão após correções (priority: Medium)
+- [x] 38: Remover variáveis sidebarCollapsed do Alpine.js em app.blade.php (priority: High)
+- [x] 39: Remover botão de toggle/colapsar do sidebar.blade.php (priority: High)
+- [x] 40: Remover todas as classes condicionais :class que dependem de sidebarCollapsed (priority: High)
+- [x] 41: Remover lógica de persistência no localStorage para sidebarCollapsed (priority: High)
+- [x] 42: Simplificar sidebar para largura fixa (w-64) e remover spans condicionais (priority: Medium)
+- [x] 43: Testar o sidebar sem funcionalidade de colapso (priority: Medium)
