@@ -48,7 +48,7 @@
                     </a>
                     <button wire:click="compartilharExtrato" 
                             id="btn-compartilhar-extrato"
-                            class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200">
+                            class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 transform">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
                         </svg>
@@ -762,34 +762,76 @@
     
     // Listener para o evento de link copiado
     $wire.on('link-copiado', (event) => {
+        console.log('Evento link-copiado recebido:', event);
+        
         const link = event[0].link;
         const message = event[0].message;
         const button = document.getElementById('btn-compartilhar-extrato');
         const buttonText = document.getElementById('btn-text');
         
-        // Copia o link para a área de transferência
-        navigator.clipboard.writeText(link).then(() => {
-            // Animação e feedback visual
-            button.classList.add('bg-green-500', 'border-green-500', 'text-white', 'scale-105');
-            button.classList.remove('bg-white', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-200', 'border-gray-300', 'dark:border-gray-600');
-            buttonText.textContent = 'Copiado!';
-            
-            // Volta ao estado original após 2 segundos
-            setTimeout(() => {
-                button.classList.remove('bg-green-500', 'border-green-500', 'text-white', 'scale-105');
-                button.classList.add('bg-white', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-200', 'border-gray-300', 'dark:border-gray-600');
-                buttonText.textContent = 'Compartilhar Extrato';
-            }, 2000);
-            
-            // Mostra notificação de sucesso
-            if (typeof window.showToast === 'function') {
-                window.showToast(message, 'success');
+        console.log('Link a ser copiado:', link);
+        console.log('Botão encontrado:', button);
+        console.log('Texto do botão encontrado:', buttonText);
+        
+        if (!button || !buttonText) {
+            console.error('Elementos do botão não encontrados');
+            return;
+        }
+        
+        // Verifica se o navegador suporta clipboard API
+        if (!navigator.clipboard) {
+            console.warn('Clipboard API não suportada, usando fallback');
+            // Fallback para navegadores que não suportam clipboard API
+            const textArea = document.createElement('textarea');
+            textArea.value = link;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                console.log('Link copiado usando fallback');
+                // Animação de sucesso
+                animateButton(button, buttonText, message);
+            } catch (err) {
+                console.error('Erro ao copiar usando fallback:', err);
+                prompt('Copie o link abaixo:', link);
             }
-        }).catch(() => {
+            document.body.removeChild(textArea);
+            return;
+        }
+        
+        // Copia o link para a área de transferência usando Clipboard API
+        navigator.clipboard.writeText(link).then(() => {
+            console.log('Link copiado com sucesso usando Clipboard API');
+            // Animação de sucesso
+            animateButton(button, buttonText, message);
+        }).catch((err) => {
+            console.error('Erro ao copiar usando Clipboard API:', err);
             // Fallback se não conseguir copiar
             prompt('Copie o link abaixo:', link);
         });
     });
+    
+    // Função para animar o botão
+    function animateButton(button, buttonText, message) {
+        // Animação e feedback visual
+        button.classList.add('bg-green-500', 'border-green-500', 'text-white', 'scale-105');
+        button.classList.remove('bg-white', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-200', 'border-gray-300', 'dark:border-gray-600');
+        buttonText.textContent = 'Copiado!';
+        
+        // Volta ao estado original após 2 segundos
+        setTimeout(() => {
+            button.classList.remove('bg-green-500', 'border-green-500', 'text-white', 'scale-105');
+            button.classList.add('bg-white', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-200', 'border-gray-300', 'dark:border-gray-600');
+            buttonText.textContent = 'Compartilhar Extrato';
+        }, 2000);
+        
+        // Mostra notificação de sucesso
+        if (typeof window.showToast === 'function') {
+            window.showToast(message, 'success');
+        } else {
+            console.log('Função showToast não encontrada, mensagem:', message);
+        }
+    }
 
 </script>
 @endscript

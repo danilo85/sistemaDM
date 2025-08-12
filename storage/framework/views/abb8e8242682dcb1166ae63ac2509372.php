@@ -96,7 +96,7 @@
     <div class="mt-6 flex flex-1 flex-col justify-between">
         <nav class="-mx-3 space-y-6" role="navigation">
             
-            <div class="space-y-1">
+            <div class="space-y-2">
                 <a
                     class="<?php echo e($linkBase); ?> <?php echo e(request()->routeIs('dashboard') ? $activeBg : ''); ?>"
                     :class="(sidebarCollapsed && !isMobile) ? 'px-2 py-3 justify-center' : 'px-3 py-2'"
@@ -128,7 +128,7 @@
 
             
             <?php if(auth()->user()->can('acessar_clientes') || auth()->user()->can('acessar_autores') || auth()->user()->can('gerenciar_usuarios')): ?>
-                <div class="space-y-1 border-t border-gray-200 dark:border-gray-700 pt-4">
+                <div class="space-y-2 border-t border-gray-200 dark:border-gray-700 pt-4">
                     <label x-show="!sidebarCollapsed || isMobile" class="px-3 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">Gestão</label>
                     <div x-show="sidebarCollapsed && !isMobile" class="w-full h-px bg-gray-300 dark:bg-gray-600 mx-auto"></div>
 
@@ -178,20 +178,11 @@
             <?php endif; ?>
 
             
-            <div class="space-y-1 border-t border-gray-200 dark:border-gray-700 pt-4">
+            <div class="space-y-2 border-t border-gray-200 dark:border-gray-700 pt-4">
                 <label x-show="!sidebarCollapsed || isMobile" x-cloak class="px-3 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">Portfólio</label>
                 <div x-show="sidebarCollapsed && !isMobile" class="w-full h-px bg-gray-300 dark:bg-gray-600 mx-auto"></div>
 
                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('acessar_clientes')): ?>
-                    
-                    <a class="flex items-center rounded-lg text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 <?php echo e(request()->routeIs('portfolio.index') ? 'bg-gray-100 dark:bg-gray-700' : ''); ?>" 
-                    :class="(sidebarCollapsed && !isMobile) ? 'p-3 justify-center' : 'p-2'" 
-                    href="<?php echo e(route('portfolio.index')); ?>" 
-                    :title="sidebarCollapsed ? 'Meus Trabalhos' : ''">
-                        <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                        <span x-show="!sidebarCollapsed || isMobile" x-cloak class="mx-2 text-sm font-medium whitespace-nowrap">Meus Trabalhos</span>
-                    </a>
-
                     
                     <a class="flex items-center rounded-lg text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 <?php echo e(request()->routeIs('portfolio.pipeline.index') ? 'bg-gray-100 dark:bg-gray-700' : ''); ?>" 
                     :class="(sidebarCollapsed && !isMobile) ? 'p-3 justify-center' : 'p-2'" 
@@ -214,7 +205,7 @@
 
             
             <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('acessar_financeiro')): ?>
-                <div class="space-y-1 border-t border-gray-200 dark:border-gray-700 pt-4">
+                <div class="space-y-2 border-t border-gray-200 dark:border-gray-700 pt-4">
                     <label x-show="!sidebarCollapsed || isMobile" class="px-3 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">Financeiro</label>
                     <div x-show="sidebarCollapsed && !isMobile" class="w-full h-px bg-gray-300 dark:bg-gray-600 mx-auto"></div>
 
@@ -264,7 +255,7 @@
         </nav>
 
         
-        <div class="space-y-1 border-t border-gray-200 dark:border-gray-700 pt-4">
+        <div class="space-y-2 border-t border-gray-200 dark:border-gray-700 pt-4">
             <label x-show="!sidebarCollapsed || isMobile" class="px-3 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">Conta</label>
             <div x-show="sidebarCollapsed && !isMobile" class="w-full h-px bg-gray-300 dark:bg-gray-600 mx-auto"></div>
 
