@@ -3,8 +3,10 @@
 namespace App\Livewire;
 
 use App\Models\Orcamento;
-use App\Notifications\OrcamentoAprovadoNotification;
+use App\Events\BudgetApproved;
+use App\Events\BudgetRejected;
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 class PublicOrcamentoView extends Component
 {
@@ -31,8 +33,13 @@ class PublicOrcamentoView extends Component
             $this->orcamento->status = 'Aprovado';
             $this->orcamento->save();
 
-            // 1. Envia a notificação para o dono do orçamento
-            $this->orcamento->user->notify(new OrcamentoAprovadoNotification($this->orcamento));
+            // 1. Dispara o evento BudgetApproved para o novo sistema de notificações
+            event(new BudgetApproved(
+                $this->orcamento,
+                $this->orcamento->user, // Usuário que criou o orçamento
+                'Orçamento aprovado pelo cliente via link público',
+                true // isPublicApproval = true
+            ));
 
             // 2. Avisa o sino para se atualizar
             $this->dispatch('new-alert-sent');
@@ -51,7 +58,14 @@ class PublicOrcamentoView extends Component
             $this->orcamento->status = 'Rejeitado';
             $this->orcamento->save();
 
-            // Avisa outros componentes que o status mudou
+            // 1. Dispara o evento BudgetRejected para o novo sistema de notificações
+            event(new BudgetRejected(
+                $this->orcamento,
+                $this->orcamento->user, // Usuário que criou o orçamento
+                'Orçamento rejeitado pelo cliente via link público'
+            ));
+
+            // 2. Avisa outros componentes que o status mudou
             $this->dispatch('status-atualizado', $this->orcamento->id);
 
             session()->flash('success', 'Orçamento rejeitado.');

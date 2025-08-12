@@ -1,7 +1,6 @@
 # TODO:
 
-- [x] 85: Adicionar métodos deleteImage e updateImageOrder no PortfolioForm.php (priority: High)
-- [x] 86: Modificar a seção de imagens existentes no portfolio-form.blade.php com botões de deletar (priority: High)
-- [x] 87: Implementar drag-and-drop com SortableJS para reordenar imagens (priority: High)
-- [x] 88: Criar modal responsivo para preview das imagens (priority: Medium)
-- [x] 89: Testar todas as funcionalidades implementadas (priority: Medium)
+- [x] 41: Verificar o layout portfolio.blade.php atual e como está configurado (priority: High)
+- [x] 42: Examinar as views services.blade.php, about.blade.php e contact.blade.php (priority: High)
+- [x] 43: Criar solução que suporte tanto {{ $slot }} quanto @yield('content') (priority: High)
+- [x] 44: Testar todas as páginas após a correção (priority: Medium)

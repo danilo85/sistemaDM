@@ -11,6 +11,18 @@
                 defaultDate: this.value,
                 onChange: (selectedDates, dateStr) => {
                     this.value = dateStr;
+                    // Sincronizar com Livewire
+                    if (this.$wire) {
+                        this.$wire.set('{{ $name }}', dateStr);
+                    }
+                }
+            });
+            
+            // Observar mudanças do Livewire para atualizar o flatpickr
+            this.$watch('$wire.{{ $name }}', (newValue) => {
+                if (newValue !== this.value && this.instance) {
+                    this.value = newValue;
+                    this.instance.setDate(newValue, false);
                 }
             });
         }

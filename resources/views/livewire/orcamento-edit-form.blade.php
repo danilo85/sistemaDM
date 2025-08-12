@@ -132,14 +132,14 @@
             {{-- Data de Emissão --}}
             <div>
                 <label for="data_emissao" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Data de Emissão</label>
-                <x-date-picker name="data_emissao" wire:model="data_emissao" id="data_emissao" class="block w-full p-2.5 rounded-lg border-transparent bg-gray-100 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500" />
+                <x-date-picker name="data_emissao" wire:model="data_emissao" value="{{ $data_emissao }}" id="data_emissao" class="block w-full p-2.5 rounded-lg border-transparent bg-gray-100 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500" />
                 @error('data_emissao') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
             </div>
 
             {{-- Data de Validade --}}
             <div>
                 <label for="data_validade" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Data de Validade</label>
-                <x-date-picker name="data_validade" wire:model="data_validade" id="data_validade" class="block w-full p-2.5 rounded-lg border-transparent bg-gray-100 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500" />
+                <x-date-picker name="data_validade" wire:model="data_validade" value="{{ $data_validade }}" id="data_validade" class="block w-full p-2.5 rounded-lg border-transparent bg-gray-100 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500" />
                 @error('data_validade') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
             </div>
             

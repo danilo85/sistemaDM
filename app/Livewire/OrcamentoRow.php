@@ -4,7 +4,9 @@ namespace App\Livewire;
 
 use App\Models\Orcamento;
 use Livewire\Component;
-use App\Notifications\OrcamentoAprovadoNotification;
+use App\Events\BudgetApproved;
+use App\Events\BudgetRejected;
+use Illuminate\Support\Facades\Auth;
 
 class OrcamentoRow extends Component
 {
@@ -16,12 +18,26 @@ class OrcamentoRow extends Component
             $this->orcamento->status = $novoStatus;
             $this->orcamento->save();
 
-            // Dispara a notificação quando o status é "Aprovado"
+            // Dispara eventos do novo sistema de notificações
             if ($novoStatus === 'Aprovado') {
-                // Envia a notificação para o dono do orçamento
-                $this->orcamento->user->notify(new OrcamentoAprovadoNotification($this->orcamento));
+                // Dispara o evento BudgetApproved para o novo sistema de notificações
+                event(new BudgetApproved(
+                    $this->orcamento,
+                    Auth::user(), // Usuário que aprovou
+                    'Orçamento aprovado via lista de orçamentos'
+                ));
                 
                 // CORREÇÃO: Avisa o componente do sino que uma nova notificação foi enviada
+                $this->dispatch('new-alert-sent');
+            } elseif ($novoStatus === 'Rejeitado') {
+                // Dispara o evento BudgetRejected para o novo sistema de notificações
+                event(new BudgetRejected(
+                    $this->orcamento,
+                    Auth::user(), // Usuário que rejeitou
+                    'Orçamento rejeitado via lista de orçamentos'
+                ));
+                
+                // Avisa o componente do sino que uma nova notificação foi enviada
                 $this->dispatch('new-alert-sent');
             }
 

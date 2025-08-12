@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Portfolio extends Model
 {
@@ -16,6 +17,7 @@ class Portfolio extends Model
         'orcamento_id',
         'portfolio_category_id',
         'title',
+        'slug',
         'description',
         'post_date',
         'external_link',
@@ -55,5 +57,42 @@ class Portfolio extends Model
     public function thumb()
     {
         return $this->hasOne(PortfolioImage::class)->where('is_thumb', true);
+    }
+
+    /**
+     * Boot method para gerar slug automaticamente
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($portfolio) {
+            if (empty($portfolio->slug)) {
+                $portfolio->slug = static::generateUniqueSlug($portfolio->title);
+            }
+        });
+
+        static::updating(function ($portfolio) {
+            if ($portfolio->isDirty('title') && empty($portfolio->slug)) {
+                $portfolio->slug = static::generateUniqueSlug($portfolio->title);
+            }
+        });
+    }
+
+    /**
+     * Gerar slug único
+     */
+    private static function generateUniqueSlug($title)
+    {
+        $slug = Str::slug($title);
+        $originalSlug = $slug;
+        $counter = 1;
+
+        while (static::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
     }
 }

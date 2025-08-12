@@ -20,6 +20,14 @@ class PortfolioImage extends Model
         'is_thumb' => 'boolean',
     ];
 
+    /**
+     * Accessor para compatibilidade com views que usam image_path
+     */
+    public function getImagePathAttribute()
+    {
+        return $this->path;
+    }
+
     public function portfolio(): BelongsTo
     {
         return $this->belongsTo(Portfolio::class);

@@ -11,12 +11,14 @@ use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\BancoController;
 use App\Http\Controllers\CartaoCreditoController;
 use App\Http\Controllers\TransacaoController;
+use App\Http\Controllers\PagamentoController;
 use App\Http\Controllers\Admin\UserController;
 use App\Livewire\PublicOrcamentoView;
 use App\Livewire\Portfolio\CategoryManager;
 use App\Livewire\Portfolio\Pipeline;
 use App\Livewire\Portfolio\PortfolioForm;
 use App\Livewire\Portfolio\PortfolioList;
+use App\Http\Controllers\NotificationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -32,6 +34,22 @@ Route::get('/', function () {
 Route::get('/orcamento/{orcamento:token}', PublicOrcamentoView::class)->name('orcamentos.public.show');
 Route::get('/orcamentos/pdf/{token}/{parcelas?}', [OrcamentoController::class, 'gerarPDF'])->name('orcamentos.pdf');
 Route::get('/recibos/{token}', [OrcamentoController::class, 'showPublicReceipt'])->name('receipts.public.show');
+Route::get('/extrato/{cliente:token}', App\Livewire\PublicExtratoView::class)->name('extrato.public.show');
+
+// Rotas públicas do portfólio
+Route::get('/portfolio', App\Livewire\PublicPortfolioIndex::class)->name('portfolio.public.index');
+Route::get('/portfolio/{slug}', App\Livewire\PortfolioWorkDetail::class)->name('portfolio.public.show');
+Route::get('/portfolio/categoria/{categoria}', App\Livewire\PublicPortfolioIndex::class)->name('portfolio.public.category');
+Route::get('/servicos', function () {
+    return view('portfolio.services');
+})->name('services.public.index');
+Route::get('/sobre', function () {
+    return view('portfolio.about');
+})->name('about.public.index');
+Route::get('/contato', function () {
+    return view('portfolio.contact');
+})->name('contact.public.index');
+Route::post('/api/contato', [App\Http\Controllers\PortfolioContactController::class, 'store'])->name('api.contact.store');
 
 // Grupo de rotas que exigem que o usuário esteja autenticado
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -78,12 +96,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::resource('cartoes', CartaoCreditoController::class)->parameters(['cartoes' => 'cartao'])->names('cartoes');
             Route::get('cartoes/{cartao}/extrato', [CartaoCreditoController::class, 'extrato'])->name('cartoes.extrato');
             Route::resource('transacoes', TransacaoController::class)->parameters(['transacoes' => 'transacao'])->names('transacoes');
+            Route::resource('pagamentos', PagamentoController::class)->names('pagamentos');
         });
 
         // Rotas de busca (podem ser acedidas por quem tem acesso a clientes ou autores)
         Route::middleware('can:acessar_clientes|acessar_autores')->group(function () {
             Route::get('/search/clientes', [ClienteController::class, 'search'])->name('search.clientes');
             Route::get('/search/autores', [AutorController::class, 'search'])->name('search.autores');
+        });
+
+        // Rotas da API de Notificações
+        Route::prefix('api/notifications')->name('api.notifications.')->group(function () {
+            Route::get('/', [NotificationController::class, 'index'])->name('index');
+            Route::patch('/{id}/read', [NotificationController::class, 'markAsRead'])->name('mark-read');
+            Route::patch('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+            Route::patch('/{id}/snooze', [NotificationController::class, 'snooze'])->name('snooze');
+            Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
+            Route::get('/settings', [NotificationController::class, 'getSettings'])->name('settings.get');
+            Route::patch('/settings', [NotificationController::class, 'updateSettings'])->name('settings.update');
+            Route::get('/stats', [NotificationController::class, 'getStats'])->name('stats');
+            Route::get('/{id}/actions', [NotificationController::class, 'getActions'])->name('actions');
         });
     });
 });

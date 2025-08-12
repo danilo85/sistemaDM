@@ -7,6 +7,32 @@
 ?>
 
 <aside
+    x-data="{
+        sidebarCollapsed: false,
+        isMobile: false,
+        sidebarOpen: true,
+        darkMode: document.documentElement.classList.contains('dark') ?? false,
+        init() {
+            // Responsivo (smaller than md)
+            const mq = window.matchMedia('(max-width: 1024px)');
+            const setMobile = () => { this.isMobile = mq.matches; if(this.isMobile) this.sidebarCollapsed = false; };
+            mq.addEventListener?.('change', setMobile); setMobile();
+
+            // Persistência de colapso
+            const saved = localStorage.getItem('sidebarCollapsed');
+            if (saved !== null) this.sidebarCollapsed = JSON.parse(saved);
+            this.$watch('sidebarCollapsed', v => localStorage.setItem('sidebarCollapsed', JSON.stringify(v)));
+
+            // DarkMode (opcional)
+            this.$watch('darkMode', v => {
+                document.documentElement.classList.toggle('dark', v);
+                localStorage.setItem('theme', v ? 'dark' : 'light');
+            });
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) this.darkMode = savedTheme === 'dark';
+        }
+    }"
+    x-cloak
     class="flex h-screen flex-col overflow-y-auto overflow-x-hidden border-r bg-white dark:border-gray-700 dark:bg-gray-800"
     :class="(sidebarCollapsed && !isMobile) ? 'w-16 px-2 py-8' : 'w-64 px-5 py-8'"
     aria-label="Barra lateral de navegação"
@@ -70,7 +96,7 @@
     <div class="mt-6 flex flex-1 flex-col justify-between">
         <nav class="-mx-3 space-y-6" role="navigation">
             
-            <div class="space-y-2">
+            <div class="space-y-1">
                 <a
                     class="<?php echo e($linkBase); ?> <?php echo e(request()->routeIs('dashboard') ? $activeBg : ''); ?>"
                     :class="(sidebarCollapsed && !isMobile) ? 'px-2 py-3 justify-center' : 'px-3 py-2'"
@@ -102,7 +128,7 @@
 
             
             <?php if(auth()->user()->can('acessar_clientes') || auth()->user()->can('acessar_autores') || auth()->user()->can('gerenciar_usuarios')): ?>
-                <div class="space-y-2 border-t border-gray-200 dark:border-gray-700 pt-4">
+                <div class="space-y-1 border-t border-gray-200 dark:border-gray-700 pt-4">
                     <label x-show="!sidebarCollapsed || isMobile" class="px-3 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">Gestão</label>
                     <div x-show="sidebarCollapsed && !isMobile" class="w-full h-px bg-gray-300 dark:bg-gray-600 mx-auto"></div>
 
@@ -152,43 +178,43 @@
             <?php endif; ?>
 
             
-<div class="space-y-2 border-t border-gray-200 dark:border-gray-700 pt-4">
-    <label x-show="!sidebarCollapsed || isMobile" x-cloak class="px-3 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">Portfólio</label>
-    <div x-show="sidebarCollapsed && !isMobile" class="w-full h-px bg-gray-300 dark:bg-gray-600 mx-auto"></div>
+            <div class="space-y-1 border-t border-gray-200 dark:border-gray-700 pt-4">
+                <label x-show="!sidebarCollapsed || isMobile" x-cloak class="px-3 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">Portfólio</label>
+                <div x-show="sidebarCollapsed && !isMobile" class="w-full h-px bg-gray-300 dark:bg-gray-600 mx-auto"></div>
 
-    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('acessar_clientes')): ?>
-        
-        <a class="flex items-center rounded-lg text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 <?php echo e(request()->routeIs('portfolio.index') ? 'bg-gray-100 dark:bg-gray-700' : ''); ?>" 
-           :class="(sidebarCollapsed && !isMobile) ? 'p-3 justify-center' : 'p-2'" 
-           href="<?php echo e(route('portfolio.index')); ?>" 
-           :title="sidebarCollapsed ? 'Trabalhos' : ''">
-            <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l-1.586-1.586a2 2 0 00-2.828 0L6 14m6-6l.01.01"></path><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
-            <span x-show="!sidebarCollapsed || isMobile" x-cloak class="mx-2 text-sm font-medium whitespace-nowrap">Trabalhos</span>
-        </a>
+                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('acessar_clientes')): ?>
+                    
+                    <a class="flex items-center rounded-lg text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 <?php echo e(request()->routeIs('portfolio.index') ? 'bg-gray-100 dark:bg-gray-700' : ''); ?>" 
+                    :class="(sidebarCollapsed && !isMobile) ? 'p-3 justify-center' : 'p-2'" 
+                    href="<?php echo e(route('portfolio.index')); ?>" 
+                    :title="sidebarCollapsed ? 'Meus Trabalhos' : ''">
+                        <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        <span x-show="!sidebarCollapsed || isMobile" x-cloak class="mx-2 text-sm font-medium whitespace-nowrap">Meus Trabalhos</span>
+                    </a>
 
-        
-        <a class="flex items-center rounded-lg text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 <?php echo e(request()->routeIs('portfolio.pipeline.index') ? 'bg-gray-100 dark:bg-gray-700' : ''); ?>" 
-           :class="(sidebarCollapsed && !isMobile) ? 'p-3 justify-center' : 'p-2'" 
-           href="<?php echo e(route('portfolio.pipeline.index')); ?>" 
-           :title="sidebarCollapsed ? 'Pipeline' : ''">
-            <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-            <span x-show="!sidebarCollapsed || isMobile" x-cloak class="mx-2 text-sm font-medium whitespace-nowrap">Pipeline</span>
-        </a>
+                    
+                    <a class="flex items-center rounded-lg text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 <?php echo e(request()->routeIs('portfolio.pipeline.index') ? 'bg-gray-100 dark:bg-gray-700' : ''); ?>" 
+                    :class="(sidebarCollapsed && !isMobile) ? 'p-3 justify-center' : 'p-2'" 
+                    href="<?php echo e(route('portfolio.pipeline.index')); ?>" 
+                    :title="sidebarCollapsed ? 'Pipeline' : ''">
+                        <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                        <span x-show="!sidebarCollapsed || isMobile" x-cloak class="mx-2 text-sm font-medium whitespace-nowrap">Pipeline</span>
+                    </a>
 
-        
-        <a class="flex items-center rounded-lg text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 <?php echo e(request()->routeIs('portfolio.categories.index') ? 'bg-gray-100 dark:bg-gray-700' : ''); ?>" 
-           :class="(sidebarCollapsed && !isMobile) ? 'p-3 justify-center' : 'p-2'" 
-           href="<?php echo e(route('portfolio.categories.index')); ?>" 
-           :title="sidebarCollapsed ? 'Categorias' : ''">
-            <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-            <span x-show="!sidebarCollapsed || isMobile" x-cloak class="mx-2 text-sm font-medium whitespace-nowrap">Categorias</span>
-        </a>
-    <?php endif; ?>
-</div>
+                    
+                    <a class="flex items-center rounded-lg text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-200 dark:hover:bg-gray-700 <?php echo e(request()->routeIs('portfolio.categories.index') ? 'bg-gray-100 dark:bg-gray-700' : ''); ?>" 
+                    :class="(sidebarCollapsed && !isMobile) ? 'p-3 justify-center' : 'p-2'" 
+                    href="<?php echo e(route('portfolio.categories.index')); ?>" 
+                    :title="sidebarCollapsed ? 'Categorias' : ''">
+                        <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        <span x-show="!sidebarCollapsed || isMobile" x-cloak class="mx-2 text-sm font-medium whitespace-nowrap">Categorias</span>
+                    </a>
+                <?php endif; ?>
+            </div>
 
             
             <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('acessar_financeiro')): ?>
-                <div class="space-y-2 border-t border-gray-200 dark:border-gray-700 pt-4">
+                <div class="space-y-1 border-t border-gray-200 dark:border-gray-700 pt-4">
                     <label x-show="!sidebarCollapsed || isMobile" class="px-3 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">Financeiro</label>
                     <div x-show="sidebarCollapsed && !isMobile" class="w-full h-px bg-gray-300 dark:bg-gray-600 mx-auto"></div>
 
@@ -238,7 +264,7 @@
         </nav>
 
         
-        <div class="space-y-2 border-t border-gray-200 dark:border-gray-700 pt-4">
+        <div class="space-y-1 border-t border-gray-200 dark:border-gray-700 pt-4">
             <label x-show="!sidebarCollapsed || isMobile" class="px-3 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">Conta</label>
             <div x-show="sidebarCollapsed && !isMobile" class="w-full h-px bg-gray-300 dark:bg-gray-600 mx-auto"></div>
 
