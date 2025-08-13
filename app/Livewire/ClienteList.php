@@ -22,7 +22,7 @@ class ClienteList extends Component
 
     // Conecta as propriedades com a URL
     #[Url(as: 'q')]
-    public string $busca = '';
+    public string $search = '';
 
     #[Url(as: 'ordenar_por')]
     public string $sortField = 'name';
@@ -41,21 +41,31 @@ class ClienteList extends Component
         $this->resetPage();
     }
 
-    public function updatingBusca()
+    public function updatingSearch()
     {
         $this->resetPage();
     }
 
+    public function updateCor($clienteId, $cor)
+    {
+        $cliente = Cliente::find($clienteId);
+        if ($cliente) {
+            $cliente->update(['cor' => $cor]);
+            $this->dispatch('corAtualizada', ['clienteId' => $clienteId, 'cor' => $cor]);
+        }
+    }
+
     public function render()
     {
-        // CORREÇÃO: A busca agora começa filtrando pelo user_id do usuário logado
-        $query = Cliente::where('user_id', Auth::id());
+        // CORREÇÃO TEMPORÁRIA: Removendo filtro por user_id para exibir todos os clientes
+        $query = Cliente::query();
 
         // Aplica a busca se houver texto
-        if (trim($this->busca)) {
+        if (trim($this->search)) {
             $query->where(function ($q) {
-                $q->where('name', 'like', '%' . $this->busca . '%')
-                  ->orWhere('email', 'like', '%' . $this->busca . '%');
+                $q->where('name', 'like', '%' . $this->search . '%')
+                  ->orWhere('email', 'like', '%' . $this->search . '%')
+                  ->orWhere('phone', 'like', '%' . $this->search . '%');
             });
         }
 

@@ -8,19 +8,28 @@
 <?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
+     <?php $__env->slot('header', null, []); ?> 
+        <div class="flex items-center justify-between">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                Portfólio do Autor: <?php echo e($autor->name); ?>
 
+            </h2>
+            <a href="<?php echo e(route('autores.index')); ?>" class="bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-gray-300 font-bold py-2 px-4 rounded-lg text-sm">
+                &larr; Voltar para a Lista
+            </a>
+        </div>
+     <?php $__env->endSlot(); ?>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <?php
+            
+            <?php
 $__split = function ($name, $params = []) {
     return [$name, $params];
 };
-[$__name, $__params] = $__split('cliente-list');
+[$__name, $__params] = $__split('autor.autor-portfolio', ['autor' => $autor]);
 
-$__html = app('livewire')->mount($__name, $__params, 'lw-2752199801-0', $__slots ?? [], get_defined_vars());
+$__html = app('livewire')->mount($__name, $__params, 'lw-4256152925-0', $__slots ?? [], get_defined_vars());
 
 echo $__html;
 
@@ -30,16 +39,8 @@ unset($__params);
 unset($__split);
 if (isset($__slots)) unset($__slots);
 ?>
-                </div>
-            </div>
         </div>
     </div>
-
-    
-    <a href="<?php echo e(route('clientes.create')); ?>" title="Novo Cliente"
-       class="fixed bottom-6 right-6 inline-flex items-center justify-center w-12 h-12 bg-blue-600 text-white rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform duration-200 ease-in-out hover:scale-110">
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-    </a>
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
@@ -50,4 +51,4 @@ if (isset($__slots)) unset($__slots);
 <?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
 <?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
 <?php endif; ?>
-<?php /**PATH C:\laragon\www\sistemaDM\resources\views/admin/clientes/index.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\laragon\www\sistemaDM\resources\views/admin/autores/show.blade.php ENDPATH**/ ?>

@@ -1,121 +1,184 @@
 <div>
-        {{-- BARRA DE BUSCA EXPANSÍVEL --}}
-    <div class="mb-4 flex justify-end">
-        {{-- CORREÇÃO: Adicionada uma altura fixa (h-10) ao contêiner para evitar o "pulo" no layout --}}
-        <div x-data="{ searchOpen: $wire.get('busca') !== '' }" class="relative flex items-center h-10">
+    {{-- CABEÇALHO COM TÍTULO E BUSCA --}}
+    <div class="mb-6">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            {{-- TÍTULO E SUBTÍTULO À ESQUERDA --}}
+            <div class="flex-1 min-w-0">
+                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mb-2">
+                    Gestão de Clientes
+                </h2>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    Gerencie seus clientes e informações de contato
+                </p>
+            </div>
             
-            {{-- O campo de busca, que agora aparece e desaparece --}}
-            <div x-show="searchOpen" 
-                 x-transition:enter="transition ease-out duration-300"
-                 x-transition:enter-start="opacity-0 scale-x-0"
-                 x-transition:enter-end="opacity-100 scale-x-100"
-                 x-transition:leave="transition ease-in duration-200"
-                 x-transition:leave-start="opacity-100 scale-x-100"
-                 x-transition:leave-end="opacity-0 scale-x-0"
-                 @click.away="if($wire.get('busca') === '') searchOpen = false" 
-                 class="relative origin-right"
-                 style="display: none;">
-                
-                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" /></svg>
-                </div>
-                <input 
-                    x-ref="searchInput"
-                    type="text" 
-                    wire:model.live.debounce.300ms="busca" 
-                    placeholder="Buscar..."
-                    class="block w-full sm:w-80 rounded-lg border-transparent bg-gray-100 dark:bg-gray-800 pl-10 pr-10 shadow-sm focus:ring-2 focus:ring-blue-500"
-                >
-                <div x-show="$wire.get('busca') !== ''" x-transition class="absolute inset-y-0 right-0 flex items-center pr-3">
-                    <button wire:click="$set('busca', '')" @click="searchOpen = false" type="button" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                    </button>
+            {{-- BUSCA DE CLIENTES À DIREITA --}}
+            <div class="flex-shrink-0 w-full lg:w-80">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <input type="text" 
+                           wire:model.live.debounce.300ms="search"
+                           placeholder="Buscar clientes..."
+                           class="block w-full pl-10 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-400 sm:text-sm">
+                    {{-- Botão X para limpar busca --}}
+                    @if($search)
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                            <button wire:click="$set('search', '')" type="button" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    @endif
                 </div>
             </div>
-
-            {{-- O botão de ícone que fica visível quando a busca está fechada --}}
-            <button x-show="!searchOpen" @click="searchOpen = true; $nextTick(() => $refs.searchInput.focus())" type="button" class="p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
-                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" /></svg>
-            </button>
         </div>
     </div>
 
-    {{-- TABELA DE CLIENTES --}}
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th scope="col" class="px-6 py-3">
-                        <button wire:click="sortBy('name')" class="flex items-center gap-1 uppercase">
-                            Nome
-                            @if($sortField === 'name')
-                                <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'm5 15l7-7 7 7' : 'm19 9l-7 7-7-7' }}" /></svg>
-                            @endif
-                        </button>
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        <button wire:click="sortBy('email')" class="flex items-center gap-1 uppercase">
-                            Email
-                            @if($sortField === 'email')
-                                <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'm5 15l7-7 7 7' : 'm19 9l-7 7-7-7' }}" /></svg>
-                            @endif
-                        </button>
-                    </th>
-                    <th scope="col" class="px-6 py-3 uppercase">Telefone</th>
-                    <th scope="col" class="px-6 py-3 text-right uppercase">Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($clientes as $cliente)
-                    <tr wire:key="{{ $cliente->id }}" class="border-b bg-white dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                            <a href="{{ route('clientes.show', $cliente) }}" class="flex items-center gap-2 hover:underline dark:text-indigo-400">
-                                <span>{{ $cliente->name }}</span>
-                                @if (!$cliente->is_complete)
-                                    <span class="text-yellow-500" title="Cadastro Incompleto">⚠️</span>
-                                @endif
+    {{-- CONTROLES DE ORDENAÇÃO --}}
+    <div class="mb-4 flex flex-wrap gap-2">
+        <button wire:click="sortBy('name')" class="flex items-center gap-1 px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+            Nome
+            @if($sortField === 'name')
+                <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'm5 15l7-7 7 7' : 'm19 9l-7 7-7-7' }}" /></svg>
+            @endif
+        </button>
+        <button wire:click="sortBy('email')" class="flex items-center gap-1 px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+            Email
+            @if($sortField === 'email')
+                <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="{{ $sortDirection === 'asc' ? 'm5 15l7-7 7 7' : 'm19 9l-7 7-7-7' }}" /></svg>
+            @endif
+        </button>
+    </div>
+
+    {{-- CARDS DE CLIENTES --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        @forelse ($clientes as $cliente)
+            @php
+                $cores = [
+                    'blue' => 'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-700',
+                    'green' => 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-700',
+                    'pink' => 'bg-pink-50 border-pink-200 dark:bg-pink-900/20 dark:border-pink-700',
+                    'yellow' => 'bg-yellow-50 border-yellow-200 dark:bg-yellow-900/20 dark:border-yellow-700',
+                    'purple' => 'bg-purple-50 border-purple-200 dark:bg-purple-900/20 dark:border-purple-700',
+                    'orange' => 'bg-orange-50 border-orange-200 dark:bg-orange-900/20 dark:border-orange-700'
+                ];
+                $corClasse = $cores[$cliente->cor] ?? $cores['blue'];
+            @endphp
+            <div wire:key="{{ $cliente->id }}" class="{{ $corClasse }} rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                {{-- Cabeçalho do Card --}}
+                <div class="p-6 pb-4">
+                    <div class="flex items-start justify-between mb-3">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white truncate flex-1">
+                            <a href="{{ route('clientes.show', $cliente) }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                                {{ $cliente->name }}
                             </a>
-                        </td>
-                        <td class="px-6 py-4">
+                        </h3>
+                        <div class="flex items-center gap-2 ml-2">
+                            @if (!$cliente->is_complete)
+                                <span class="text-yellow-500" title="Cadastro Incompleto">⚠️</span>
+                            @endif
+                            {{-- Seletor de Cores --}}
+                            <div class="relative" x-data="{ open: false }">
+                                <button @click="open = !open" class="w-6 h-6 border-2 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-colors flex items-center justify-center" title="Alterar cor">
+                                    <svg class="w-3 h-3 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="5" r="1.5"/>
+                                        <circle cx="12" cy="12" r="1.5"/>
+                                        <circle cx="12" cy="19" r="1.5"/>
+                                    </svg>
+                                </button>
+                                <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 top-8 z-20 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-3 min-w-[140px]">
+                                    <div class="grid grid-cols-2 gap-2">
+                                        @foreach(['blue', 'green', 'pink', 'yellow', 'purple', 'orange'] as $cor)
+                                            @php
+                                                $corBotao = [
+                                                    'blue' => 'bg-blue-200 hover:bg-blue-300 border-blue-300',
+                                                    'green' => 'bg-green-200 hover:bg-green-300 border-green-300',
+                                                    'pink' => 'bg-pink-200 hover:bg-pink-300 border-pink-300',
+                                                    'yellow' => 'bg-yellow-200 hover:bg-yellow-300 border-yellow-300',
+                                                    'purple' => 'bg-purple-200 hover:bg-purple-300 border-purple-300',
+                                                    'orange' => 'bg-orange-200 hover:bg-orange-300 border-orange-300'
+                                                ];
+                                            @endphp
+                                            <button wire:click="updateCor({{ $cliente->id }}, '{{ $cor }}')" @click="open = false" class="w-8 h-8 rounded-full {{ $corBotao[$cor] }} border-2 transition-all hover:scale-110 {{ $cliente->cor === $cor ? 'ring-2 ring-gray-400 dark:ring-gray-300' : '' }}" title="{{ ucfirst($cor) }}"></button>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {{-- Email --}}
+                    <div class="mb-3">
+                        <div class="flex items-center gap-2 text-sm">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
                             @if($cliente->email)
-                                <a href="mailto:{{ $cliente->email }}" class="text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline">
+                                <a href="mailto:{{ $cliente->email }}" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline truncate">
                                     {{ $cliente->email }}
                                 </a>
                             @else
-                                <span class="text-gray-400 dark:text-gray-500">-</span>
+                                <span class="text-gray-400 dark:text-gray-500">Não informado</span>
                             @endif
-                        </td>
-                        <td class="px-6 py-4">
+                        </div>
+                    </div>
+                    
+                    {{-- Telefone --}}
+                    <div class="mb-4">
+                        <div class="flex items-center gap-2 text-sm">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
                             @if($cliente->phone)
-                                <a href="https://wa.me/{{ preg_replace('/\D/', '', $cliente->phone) }}" target="_blank" class="text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline">
+                                <a href="https://wa.me/{{ preg_replace('/\D/', '', $cliente->phone) }}" target="_blank" class="text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:underline">
                                     {{ $cliente->phone }}
                                 </a>
                             @else
-                                <span class="text-gray-400 dark:text-gray-500">-</span>
+                                <span class="text-gray-400 dark:text-gray-500">Não informado</span>
                             @endif
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                           <div class="flex items-center justify-end gap-4">
-                                <a href="{{ route('clientes.edit', $cliente->id) }}" class="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-500" title="Editar">
-                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z"></path></svg>
-                                </a>
-                                <form method="POST" action="{{ route('clientes.destroy', $cliente->id) }}" onsubmit="return confirm('Tem certeza que deseja excluir este cliente?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-500" title="Excluir">
-                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td class="px-6 py-4 text-center" colspan="4">Nenhum cliente encontrado.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                        </div>
+                    </div>
+                </div>
+                
+                {{-- Ações do Card --}}
+                <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 rounded-b-lg border-t border-gray-200 dark:border-gray-600">
+                    <div class="flex items-center justify-between gap-3">
+                        <a href="{{ route('clientes.edit', $cliente->id) }}" class="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-md transition-colors">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z" />
+                            </svg>
+                            Editar
+                        </a>
+                        
+                        <form method="POST" action="{{ route('clientes.destroy', $cliente->id) }}" onsubmit="return confirm('Tem certeza que deseja excluir este cliente?')" class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                Excluir
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @empty
+            <div class="col-span-full">
+                <div class="text-center py-12">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">Nenhum cliente encontrado</h3>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Comece criando um novo cliente.</p>
+                </div>
+            </div>
+        @endforelse
     </div>
 
     {{-- Links de Paginação --}}

@@ -1,3 +1,6 @@
+<?php
+    use Illuminate\Support\Str;
+?>
 <?php if (isset($component)) { $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54 = $attributes; } ?>
 <?php $component = App\View\Components\AppLayout::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -8,7 +11,15 @@
 <?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
+     <?php $__env->slot('header', null, []); ?> 
+        
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                <?php echo e(__('Lista de Autores')); ?>
 
+            </h2>
+        </div>
+     <?php $__env->endSlot(); ?>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -18,9 +29,9 @@
 $__split = function ($name, $params = []) {
     return [$name, $params];
 };
-[$__name, $__params] = $__split('cliente-list');
+[$__name, $__params] = $__split('autor-list');
 
-$__html = app('livewire')->mount($__name, $__params, 'lw-2752199801-0', $__slots ?? [], get_defined_vars());
+$__html = app('livewire')->mount($__name, $__params, 'lw-26525754-0', $__slots ?? [], get_defined_vars());
 
 echo $__html;
 
@@ -36,7 +47,7 @@ if (isset($__slots)) unset($__slots);
     </div>
 
     
-    <a href="<?php echo e(route('clientes.create')); ?>" title="Novo Cliente"
+    <a href="<?php echo e(route('autores.create')); ?>" title="Novo Autor"
        class="fixed bottom-6 right-6 inline-flex items-center justify-center w-12 h-12 bg-blue-600 text-white rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform duration-200 ease-in-out hover:scale-110">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
     </a>
@@ -50,4 +61,4 @@ if (isset($__slots)) unset($__slots);
 <?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
 <?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
 <?php endif; ?>
-<?php /**PATH C:\laragon\www\sistemaDM\resources\views/admin/clientes/index.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\laragon\www\sistemaDM\resources\views/admin/autores/index.blade.php ENDPATH**/ ?>

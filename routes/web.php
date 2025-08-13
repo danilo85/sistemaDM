@@ -107,6 +107,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::middleware('can:acessar_clientes|acessar_autores')->group(function () {
             Route::get('/search/clientes', [ClienteController::class, 'search'])->name('search.clientes');
             Route::get('/search/autores', [AutorController::class, 'search'])->name('search.autores');
+            Route::get('/api/clientes/search', [App\Http\Controllers\Api\ClienteSearchController::class, 'search'])->name('api.clientes.search');
         });
 
         // Rota do Dashboard Simples (admin)

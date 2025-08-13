@@ -19,6 +19,7 @@ class Cliente extends Model
         'is_complete',
         'token',
         'extrato_ativo',
+        'cor',
     ];
     /**
      * Define o relacionamento: um Cliente PERTENCE A um Usuário.

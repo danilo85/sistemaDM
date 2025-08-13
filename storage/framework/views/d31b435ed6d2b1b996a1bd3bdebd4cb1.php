@@ -37,10 +37,6 @@
 
     
     <div x-data="{ 
-            // Lógica da Sidebar
-            sidebarOpen: false, 
-            isMobile: window.innerWidth < 1024,
-            
             // Lógica da Notificação Toast
             toastShow: false,
             toastMessage: '',
@@ -84,11 +80,6 @@
             }
          }" 
          x-init="
-            // Lógica da Sidebar
-            window.addEventListener('resize', () => {
-                isMobile = window.innerWidth < 1024;
-            });
-            
             // Listeners para as notificações TOAST
             <?php if(session('success')): ?>
                 showToast({ message: '<?php echo e(session('success')); ?>', type: 'success' });
@@ -114,68 +105,28 @@
                 });
             });
          " 
-         class="flex h-screen bg-gray-100 dark:bg-gray-900" 
+         class="min-h-screen bg-gray-100 dark:bg-gray-900" 
          @open-new-tab.window="window.open($event.detail.url, '_blank')">
         
-        <div :class="sidebarOpen ? 'block' : 'hidden'" @click="sidebarOpen = false" class="fixed inset-0 z-20 transition-opacity bg-black opacity-50 lg:hidden"></div>
         
-        <div :class="{
-                'translate-x-0 ease-out': sidebarOpen,
-                '-translate-x-full ease-in': !sidebarOpen
-             }" 
-             class="fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition-all duration-300 transform bg-white dark:bg-gray-800 lg:translate-x-0 lg:static lg:inset-0">
-            <?php echo $__env->make('layouts.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-        </div>
+        <?php echo $__env->make('layouts.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
-        <div class="flex flex-col flex-1 overflow-hidden">
+        
+        <main class="flex-1 py-1">
+            <?php if(isset($header)): ?>
+                <div class="bg-white dark:bg-gray-800 shadow">
+                    <div class="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8">
+                        <?php echo e($header); ?>
+
+                    </div>
+                </div>
+            <?php endif; ?>
             
-            <header class="relative bg-white dark:bg-gray-800">
-                <div class="flex items-center justify-between px-6 py-4">
-                    <div class="flex items-center flex-1">
-                        <button @click="sidebarOpen = true" class="text-gray-500 focus:outline-none lg:hidden">
-                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6H20M4 12H20M4 18H11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                        </button>
-                        <?php if(isset($header)): ?>
-                            <div class="relative mx-4 lg:mx-0 w-full">
-                                <?php echo e($header); ?>
+            <div class="max-w-7xl mx-auto py-1 px-4 sm:px-6 lg:px-8">
+                <?php echo e($slot); ?>
 
-                            </div>
-                        <?php endif; ?>
-                    </div>
-
-                    
-                    <div class="flex items-center gap-3">
-                        <?php
-$__split = function ($name, $params = []) {
-    return [$name, $params];
-};
-[$__name, $__params] = $__split('notification-bell');
-
-$__html = app('livewire')->mount($__name, $__params, 'lw-3890684060-0', $__slots ?? [], get_defined_vars());
-
-echo $__html;
-
-unset($__html);
-unset($__name);
-unset($__params);
-unset($__split);
-if (isset($__slots)) unset($__slots);
-?>
-                    </div>
-                </div>
-
-                <div class="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 dark:bg-gray-700">
-                    <div x-show="toastShow" class="h-full origin-right transition-transform duration-100 ease-linear" :class="{'bg-green-500': toastType === 'success', 'bg-blue-500': toastType === 'info', 'bg-red-500': toastType === 'error'}" :style="`transform: scaleX(${toastProgress / 100})`" style="display: none;"></div>
-                </div>
-            </header>
-
-            <main class="flex-1 overflow-x-hidden overflow-y-auto">
-                <div class="container mx-auto px-6 py-8">
-                    <?php echo e($slot); ?>
-
-                </div>
-            </main>
-        </div>
+            </div>
+        </main>
 
         
         <div x-show="toastShow" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-x-8" x-transition:enter-end="opacity-100 transform translate-x-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 transform translate-x-0" x-transition:leave-end="opacity-0 transform translate-x-8" class="fixed top-24 right-6 z-50 p-4 rounded-lg shadow-lg max-w-lg w-48" :class="{'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200': toastType === 'success', 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200': toastType === 'info', 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200': toastType === 'error'}" style="display: none;">
