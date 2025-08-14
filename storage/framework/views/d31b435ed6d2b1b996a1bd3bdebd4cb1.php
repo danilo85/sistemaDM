@@ -114,11 +114,9 @@
         
         <main class="flex-1 py-1">
             <?php if(isset($header)): ?>
-                <div class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8">
-                        <?php echo e($header); ?>
+                <div class="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8">
+                    <?php echo e($header); ?>
 
-                    </div>
                 </div>
             <?php endif; ?>
             

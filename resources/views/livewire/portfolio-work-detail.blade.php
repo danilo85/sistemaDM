@@ -140,7 +140,7 @@
                         <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
                     </div>
                     <div class="space-y-2">
-                        <h3 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{{ $relatedWork->title }}</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors whitespace-nowrap overflow-hidden text-ellipsis">{{ $relatedWork->title }}</h3>
                         <p class="text-gray-600">{{ $relatedWork->category->name }}</p>
                     </div>
                 </div>

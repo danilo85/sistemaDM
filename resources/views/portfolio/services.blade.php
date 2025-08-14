@@ -36,7 +36,7 @@
                             <i class="{{ $service->icon }} text-blue-600 text-2xl"></i>
                         </div>
                     @endif
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4">{{ $service->title }}</h3>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4 whitespace-nowrap overflow-hidden text-ellipsis">{{ $service->title }}</h3>
                     <p class="text-gray-600 leading-relaxed mb-6">{{ $service->description }}</p>
                     <a href="{{ route('contact.public.index') }}" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-colors">
                         Solicitar Orçamento

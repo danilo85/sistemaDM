@@ -6,6 +6,7 @@ use App\Models\Autor;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class AutorController extends Controller
@@ -37,7 +38,20 @@ class AutorController extends Controller
             'email' => 'nullable|email|max:255|unique:autores,email',
             'contact' => 'nullable|string|max:255',
             'bio' => 'nullable|string',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'cor' => 'nullable|string|in:blue,green,pink,yellow,orange,white',
         ]);
+        
+        // Processa o upload da logo se fornecida
+        if ($request->hasFile('logo')) {
+            $logoPath = $request->file('logo')->store('autores/logos', 'public');
+            $validated['logo'] = $logoPath;
+        }
+
+        // Define cor padrão se não fornecida
+        if (!isset($validated['cor'])) {
+            $validated['cor'] = 'white';
+        }
 
         $validated['user_id'] = Auth::id();
         $validated['is_complete'] = true;
@@ -76,7 +90,20 @@ class AutorController extends Controller
             'email' => 'nullable|email|max:255|unique:autores,email,' . $autor->id,
             'contact' => 'nullable|string|max:255',
             'bio' => 'nullable|string',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'cor' => 'nullable|string|in:blue,green,pink,yellow,orange,white',
         ]);
+        
+        // Processa o upload da nova logo se fornecida
+        if ($request->hasFile('logo')) {
+            // Remove a logo antiga se existir
+            if ($autor->logo) {
+                Storage::disk('public')->delete($autor->logo);
+            }
+            
+            $logoPath = $request->file('logo')->store('autores/logos', 'public');
+            $validated['logo'] = $logoPath;
+        }
 
         $validated['is_complete'] = true;
 

@@ -118,9 +118,29 @@ class TransacaoList extends Component
         ];
         $tituloDoMes = $mesesEmPortugues[$this->mes] . ' de ' . $this->ano;
 
+        // Combina bancos e cartões em uma única coleção para o filtro
+        $contas = collect();
+        
+        // Adiciona bancos com prefixo
+        foreach ($bancosParaFiltro as $banco) {
+            $contas->push((object) [
+                'id' => 'Banco_' . $banco->id,
+                'nome' => $banco->nome . ' (Banco)'
+            ]);
+        }
+        
+        // Adiciona cartões com prefixo
+        foreach ($cartoesParaFiltro as $cartao) {
+            $contas->push((object) [
+                'id' => 'CartaoCredito_' . $cartao->id,
+                'nome' => $cartao->nome . ' (Cartão)'
+            ]);
+        }
+
         return view('livewire.transacao-list', [
             'bancos' => $bancosParaFiltro,
             'cartoes' => $cartoesParaFiltro,
+            'contas' => $contas,
             'lancamentos' => $lancamentos,
             'dataAtual' => $dataAtual,
             'tituloDoMes' => $tituloDoMes,

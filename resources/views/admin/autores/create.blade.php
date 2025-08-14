@@ -10,10 +10,28 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
-                    <form method="POST" action="{{ route('autores.store') }}">
+                    <form method="POST" action="{{ route('autores.store') }}" enctype="multipart/form-data">
                         @csrf
 
                         <div class="space-y-6">
+                            {{-- Logo do Autor --}}
+                            <div x-data="{ logoPreview: '', dragging: false, handleFileSelect(event) { const file = event.target.files[0]; if (file) { this.logoPreview = URL.createObjectURL(file); } }, handleDrop(event) { const file = event.dataTransfer.files[0]; if (file) { document.getElementById('logo').files = event.dataTransfer.files; this.logoPreview = URL.createObjectURL(file); } } }">
+                                <label for="logo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Logo/Foto do Autor</label>
+                                <input id="logo" name="logo" type="file" class="hidden" @change="handleFileSelect($event)" accept="image/png, image/jpeg, image/jpg">
+                                <div @click="document.getElementById('logo').click()" @dragover.prevent="dragging = true" @dragleave.prevent="dragging = false" @drop.prevent="dragging = false; handleDrop($event)" class="mt-1 cursor-pointer flex flex-col justify-center items-center rounded-lg border border-dashed border-gray-300 dark:border-gray-600 px-6 py-8 transition-colors h-32" :class="{'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/10': dragging}">
+                                    <template x-if="logoPreview"><img :src="logoPreview" alt="Prévia da Logo" class="h-20 w-20 rounded-full object-cover"></template>
+                                    <template x-if="!logoPreview">
+                                        <div class="text-center">
+                                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                            <p class="mt-2 text-xs text-center text-gray-600 dark:text-gray-400"><span class="font-semibold text-indigo-600 dark:text-indigo-400">Clique</span> ou arraste</p>
+                                        </div>
+                                    </template>
+                                </div>
+                                @error('logo')
+                                    <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+
                             {{-- Nome --}}
                             <div>
                                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome</label>

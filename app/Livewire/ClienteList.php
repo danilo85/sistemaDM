@@ -69,7 +69,7 @@ class ClienteList extends Component
             });
         }
 
-        $clientes = $query->orderBy($this->sortField, $this->sortDirection)->paginate(10);
+        $clientes = $query->orderBy($this->sortField, $this->sortDirection)->paginate(12);
 
         return view('livewire.cliente-list', [
             'clientes' => $clientes,

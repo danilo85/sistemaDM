@@ -52,6 +52,12 @@ Route::get('/contato', function () {
 })->name('contact.public.index');
 Route::post('/api/contato', [App\Http\Controllers\PortfolioContactController::class, 'store'])->name('api.contact.store');
 
+// Rota temporária para executar seeder de categorias
+Route::get('/executar-seeder', App\Livewire\ExecutarSeeder::class)->name('executar.seeder');
+
+// Rota temporária para executar seeder de lançamentos
+Route::get('/executar-seeder-lancamentos', App\Livewire\ExecutarSeederLancamentos::class)->name('executar.seeder.lancamentos');
+
 // Grupo de rotas que exigem que o usuário esteja autenticado
 Route::middleware(['auth', 'verified'])->group(function () {
 

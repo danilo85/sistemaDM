@@ -23,5 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })
-    // A secção ->withProviders() foi removida, pois não é mais necessária
+    ->withProviders([
+        \App\Providers\AuthServiceProvider::class,
+    ])
     ->create();

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ClienteController extends Controller
 {
@@ -38,7 +39,14 @@ class ClienteController extends Controller
             'contact_person' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255|unique:clientes,email',
             'phone' => 'nullable|string|max:25',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+        
+        // Processa o upload da logo se fornecida
+        if ($request->hasFile('logo')) {
+            $logoPath = $request->file('logo')->store('clientes/logos', 'public');
+            $validated['logo'] = $logoPath;
+        }
         
         // CORREÇÃO: Adiciona o user_id e a flag is_complete aos dados validados
         $validated['user_id'] = Auth::id();
@@ -80,7 +88,19 @@ class ClienteController extends Controller
             'contact_person' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255|unique:clientes,email,' . $cliente->id,
             'phone' => 'nullable|string|max:25',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        // Processa o upload da nova logo se fornecida
+        if ($request->hasFile('logo')) {
+            // Remove a logo antiga se existir
+            if ($cliente->logo && \Storage::disk('public')->exists($cliente->logo)) {
+                \Storage::disk('public')->delete($cliente->logo);
+            }
+            
+            $logoPath = $request->file('logo')->store('clientes/logos', 'public');
+            $validated['logo'] = $logoPath;
+        }
 
         // 2. Adiciona a bandeirinha de "completo" aos dados validados
         $validated['is_complete'] = true;

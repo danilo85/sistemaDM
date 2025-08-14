@@ -113,10 +113,8 @@
         {{-- CONTEÚDO PRINCIPAL --}}
         <main class="flex-1 py-1">
             @if (isset($header))
-                <div class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
+                <div class="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8">
+                    {{ $header }}
                 </div>
             @endif
             

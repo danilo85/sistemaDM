@@ -12,8 +12,62 @@
                             </svg>
                         </div>
                     </div>
-                    <div>
-                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white"><?php echo e($cliente->name); ?></h1>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3">
+                            <h1 class="text-2xl font-bold text-gray-900 dark:text-white"><?php echo e($cliente->name); ?></h1>
+                            
+                            <div class="md:hidden relative" x-data="{ open: false }">
+                                <button @click="open = !open" 
+                                        class="inline-flex items-center p-1 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                                    </svg>
+                                </button>
+                                
+                                <div x-show="open" 
+                                     @click.away="open = false"
+                                     x-transition:enter="transition ease-out duration-100"
+                                     x-transition:enter-start="transform opacity-0 scale-95"
+                                     x-transition:enter-end="transform opacity-100 scale-100"
+                                     x-transition:leave="transition ease-in duration-75"
+                                     x-transition:leave-start="transform opacity-100 scale-100"
+                                     x-transition:leave-end="transform opacity-0 scale-95"
+                                     class="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 z-50">
+                                    <div class="py-1">
+                                        <a href="<?php echo e(route('orcamentos.create', ['cliente_id' => $cliente->id])); ?>" 
+                                           class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                            <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                            </svg>
+                                            Novo Orçamento
+                                        </a>
+                                        <button wire:click="compartilharExtrato" 
+                                                @click="open = false"
+                                                class="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                            <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
+                                            </svg>
+                                            Compartilhar Extrato
+                                        </button>
+                                        <button wire:click="alternarExtratoAtivo" 
+                                                @click="open = false"
+                                                class="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                            <!--[if BLOCK]><![endif]--><?php if($cliente->extrato_ativo): ?>
+                                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18 12M6 6l12 12"></path>
+                                                </svg>
+                                                Desativar Extrato
+                                            <?php else: ?>
+                                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                                Ativar Extrato
+                                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="flex items-center gap-2 mt-1">
                             <!--[if BLOCK]><![endif]--><?php if($cliente->is_complete): ?>
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
@@ -38,36 +92,40 @@
                 </div>
 
                 
-                <div class="flex flex-wrap gap-2">
-                    <a href="<?php echo e(route('orcamentos.create', ['cliente_id' => $cliente->id])); ?>" 
-                       class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        Novo Orçamento
-                    </a>
-                    <button wire:click="compartilharExtrato" 
-                            id="btn-compartilhar-extrato"
-                            class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 transform">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
-                        </svg>
-                        <span id="btn-text">Compartilhar Extrato</span>
-                    </button>
-                    <button wire:click="alternarExtratoAtivo" 
-                            class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 text-sm leading-4 font-medium rounded-md <?php echo e($cliente->extrato_ativo ? 'text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30' : 'text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30'); ?> focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <!--[if BLOCK]><![endif]--><?php if($cliente->extrato_ativo): ?>
+                <div class="hidden md:flex items-center gap-2">
+                    
+                    <div class="flex flex-wrap gap-2">
+                        <a href="<?php echo e(route('orcamentos.create', ['cliente_id' => $cliente->id])); ?>" 
+                           class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18 12M6 6l12 12"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                             </svg>
-                            Desativar Extrato
-                        <?php else: ?>
+                            Novo Orçamento
+                        </a>
+                        <button wire:click="compartilharExtrato" 
+                                id="btn-compartilhar-extrato"
+                                class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 transform">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
                             </svg>
-                            Ativar Extrato
-                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-                    </button>
+                            <span id="btn-compartilhar-texto">Compartilhar Extrato</span>
+                        </button>
+                        <button wire:click="alternarExtratoAtivo" 
+                                class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 text-sm leading-4 font-medium rounded-md <?php echo e($cliente->extrato_ativo ? 'text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30' : 'text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30'); ?> focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <!--[if BLOCK]><![endif]--><?php if($cliente->extrato_ativo): ?>
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18 12M6 6l12 12"></path>
+                                </svg>
+                                Desativar Extrato
+                            <?php else: ?>
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Ativar Extrato
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                        </button>
+                    </div>
+
 
                 </div>
             </div>
@@ -169,64 +227,7 @@
             
             <!--[if BLOCK]><![endif]--><?php if($activeTab === 'visao-geral'): ?>
                 <div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                        <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-4 text-white">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-blue-100 text-sm font-medium">Orçamentos Ativos</p>
-                                    <p class="text-2xl font-bold"><?php echo e($orcamentosEnviados); ?></p>
-                                </div>
-                                <div class="bg-blue-400 bg-opacity-30 rounded-full p-2">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-lg p-4 text-white">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-green-100 text-sm font-medium">Taxa de Aprovação</p>
-                                    <p class="text-2xl font-bold"><?php echo e(number_format($taxaAprovacao, 1)); ?>%</p>
-                                </div>
-                                <div class="bg-green-400 bg-opacity-30 rounded-full p-2">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg p-4 text-white">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-purple-100 text-sm font-medium">Receita Total</p>
-                                    <p class="text-2xl font-bold">R$ <?php echo e(number_format($totalEmProjetos, 2, ',', '.')); ?></p>
-                                </div>
-                                <div class="bg-purple-400 bg-opacity-30 rounded-full p-2">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg p-4 text-white">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-orange-100 text-sm font-medium">A Receber</p>
-                                    <p class="text-2xl font-bold">R$ <?php echo e(number_format($saldoDevedor, 2, ',', '.')); ?></p>
-                                </div>
-                                <div class="bg-orange-400 bg-opacity-30 rounded-full p-2">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                     
                     <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
                         <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
@@ -835,53 +836,55 @@
     }
     
     // Listener para o evento de link copiado
-    $wire.on('link-copiado', (event) => {
-        console.log('Evento link-copiado recebido:', event);
-        
-        const link = event[0].link;
-        const message = event[0].message;
-        const button = document.getElementById('btn-compartilhar-extrato');
-        const buttonText = document.getElementById('btn-text');
-        
-        console.log('Link a ser copiado:', link);
-        console.log('Botão encontrado:', button);
-        console.log('Texto do botão encontrado:', buttonText);
-        
-        if (!button || !buttonText) {
-            console.error('Elementos do botão não encontrados');
-            return;
-        }
-        
-        // Verifica se o navegador suporta clipboard API
-        if (!navigator.clipboard) {
-            console.warn('Clipboard API não suportada, usando fallback');
-            // Fallback para navegadores que não suportam clipboard API
-            const textArea = document.createElement('textarea');
-            textArea.value = link;
-            document.body.appendChild(textArea);
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                console.log('Link copiado usando fallback');
+    document.addEventListener('livewire:init', () => {
+        Livewire.on('link-copiado', (event) => {
+            console.log('Evento link-copiado recebido:', event);
+            
+            const link = event[0].link;
+            const message = event[0].message;
+            const button = document.getElementById('btn-compartilhar-extrato');
+            const buttonText = document.getElementById('btn-compartilhar-texto');
+            
+            console.log('Link a ser copiado:', link);
+            console.log('Botão encontrado:', button);
+            console.log('Texto do botão encontrado:', buttonText);
+            
+            if (!button || !buttonText) {
+                console.error('Elementos do botão não encontrados');
+                return;
+            }
+            
+            // Verifica se o navegador suporta clipboard API
+            if (!navigator.clipboard) {
+                console.warn('Clipboard API não suportada, usando fallback');
+                // Fallback para navegadores que não suportam clipboard API
+                const textArea = document.createElement('textarea');
+                textArea.value = link;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    console.log('Link copiado usando fallback');
+                    // Animação de sucesso
+                    animateButton(button, buttonText, message);
+                } catch (err) {
+                    console.error('Erro ao copiar usando fallback:', err);
+                    prompt('Copie o link abaixo:', link);
+                }
+                document.body.removeChild(textArea);
+                return;
+            }
+            
+            // Copia o link para a área de transferência usando Clipboard API
+            navigator.clipboard.writeText(link).then(() => {
+                console.log('Link copiado com sucesso usando Clipboard API');
                 // Animação de sucesso
                 animateButton(button, buttonText, message);
-            } catch (err) {
-                console.error('Erro ao copiar usando fallback:', err);
+            }).catch((err) => {
+                console.error('Erro ao copiar usando Clipboard API:', err);
+                // Fallback se não conseguir copiar
                 prompt('Copie o link abaixo:', link);
-            }
-            document.body.removeChild(textArea);
-            return;
-        }
-        
-        // Copia o link para a área de transferência usando Clipboard API
-        navigator.clipboard.writeText(link).then(() => {
-            console.log('Link copiado com sucesso usando Clipboard API');
-            // Animação de sucesso
-            animateButton(button, buttonText, message);
-        }).catch((err) => {
-            console.error('Erro ao copiar usando Clipboard API:', err);
-            // Fallback se não conseguir copiar
-            prompt('Copie o link abaixo:', link);
+            });
         });
     });
     

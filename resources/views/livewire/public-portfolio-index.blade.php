@@ -50,7 +50,7 @@
                         <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
                     </div>
                     <div class="space-y-2">
-                        <h3 class="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{{ $work->title }}</h3>
+                        <h3 class="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors whitespace-nowrap overflow-hidden text-ellipsis">{{ $work->title }}</h3>
                         <p class="text-gray-600">{{ $work->category->name }}</p>
                         @if($work->client)
                             <p class="text-sm text-gray-500">Cliente: {{ $work->client }}</p>
@@ -80,7 +80,7 @@
                             <i class="{{ $service->icon }} text-blue-600 text-xl"></i>
                         </div>
                     @endif
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">{{ $service->title }}</h3>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4 whitespace-nowrap overflow-hidden text-ellipsis">{{ $service->title }}</h3>
                     <p class="text-gray-600 leading-relaxed">{{ $service->description }}</p>
                 </div>
                 @endforeach
@@ -156,7 +156,7 @@
                         <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
                     </div>
                     <div class="space-y-1">
-                        <h3 class="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{{ $work->title }}</h3>
+                        <h3 class="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors whitespace-nowrap overflow-hidden text-ellipsis">{{ $work->title }}</h3>
                         <p class="text-sm text-gray-600">{{ $work->category->name }}</p>
                     </div>
                 </div>

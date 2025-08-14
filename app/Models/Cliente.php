@@ -20,6 +20,11 @@ class Cliente extends Model
         'token',
         'extrato_ativo',
         'cor',
+        'logo',
+    ];
+
+    protected $attributes = [
+        'cor' => 'white',
     ];
     /**
      * Define o relacionamento: um Cliente PERTENCE A um Usuário.

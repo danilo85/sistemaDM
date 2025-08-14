@@ -207,7 +207,7 @@
                             <div class="p-4">
                                 <div class="flex items-center justify-between mb-2">
                                     <div class="flex items-center gap-2">
-                                        <h3 class="font-bold text-gray-900 dark:text-white {{ !$portfolio->is_active ? 'text-gray-500 dark:text-gray-400' : '' }}">{{ $portfolio->title }}</h3>
+                                        <h3 class="font-bold text-gray-900 dark:text-white whitespace-nowrap overflow-hidden text-ellipsis {{ !$portfolio->is_active ? 'text-gray-500 dark:text-gray-400' : '' }}">{{ $portfolio->title }}</h3>
                                     </div>
                                     @if(!$portfolio->is_active)
                                         <span class="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 rounded-full">

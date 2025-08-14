@@ -3,27 +3,32 @@
 namespace App\Livewire;
 
 use App\Models\Autor;
-use Illuminate\Support\Facades\Auth; // Adicionar este import
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
+use Livewire\Attributes\On;
 
 class AutorList extends Component
 {
     use WithPagination;
 
+    // Adicione este listener
+    #[On('autorExcluido')]
+    public function placeholder()
+    {
+        // Este método vazio força o componente a se re-renderizar
+    }
+
+    // Conecta as propriedades com a URL
     #[Url(as: 'q')]
-    public string $busca = '';
+    public string $search = '';
 
     #[Url(as: 'ordenar_por')]
     public string $sortField = 'name';
 
     #[Url(as: 'direcao')]
     public string $sortDirection = 'asc';
-
-    #[On('autorExcluido')]
-    public function placeholder() {}
 
     public function sortBy(string $field)
     {
@@ -36,34 +41,46 @@ class AutorList extends Component
         $this->resetPage();
     }
 
-    public function updatingBusca()
+    public function updatingSearch()
     {
         $this->resetPage();
     }
 
+    public function updateCor($autorId, $cor)
+    {
+        $autor = Autor::find($autorId);
+        if ($autor) {
+            $autor->update(['cor' => $cor]);
+            $this->dispatch('corAtualizada', ['autorId' => $autorId, 'cor' => $cor]);
+        }
+    }
+
+    public function deleteAutor($autorId)
+    {
+        $autor = Autor::find($autorId);
+        if ($autor) {
+            $autor->delete();
+            session()->flash('message', 'Autor excluído com sucesso!');
+        }
+    }
+
     public function render()
     {
-        // CORREÇÃO: A busca agora começa filtrando pelo user_id do usuário logado
-        $query = Autor::where('user_id', Auth::id());
+        $query = Autor::where('user_id', auth()->id());
 
-        if (trim($this->busca)) {
+        // Aplica a busca se houver texto
+        if (trim($this->search)) {
             $query->where(function ($q) {
-                $q->where('name', 'like', '%' . $this->busca . '%')
-                  ->orWhere('email', 'like', '%' . $this->busca . '%');
+                $q->where('name', 'like', '%' . $this->search . '%')
+                  ->orWhere('email', 'like', '%' . $this->search . '%')
+                  ->orWhere('contact', 'like', '%' . $this->search . '%');
             });
         }
 
-        $autores = $query->orderBy($this->sortField, $this->sortDirection)->paginate(10);
+        $autores = $query->orderBy($this->sortField, $this->sortDirection)->paginate(12);
 
-        return view('livewire.autor-list', [
+        return view('livewire.autor.autor-list', [
             'autores' => $autores,
         ]);
-    }
-
-      public function deleteAutor(Autor $autor)
-    {
-        $autor->delete();
-        // Dispara um evento de sucesso para a notificação "toast"
-        $this->dispatch('autorExcluido', 'Autor excluído com sucesso!');
     }
 }

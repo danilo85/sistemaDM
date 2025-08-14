@@ -6,7 +6,7 @@
     <!-- Header do Card -->
     <div class="flex items-start justify-between mb-3">
         <div class="flex-1 min-w-0">
-            <h4 class="text-sm font-semibold text-gray-900 truncate" title="{{ $trabalho->titulo }}">
+            <h4 class="text-sm font-semibold text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis" title="{{ $trabalho->titulo }}">
                 {{ $trabalho->titulo }}
             </h4>
             <p class="text-xs text-gray-500 mt-1">

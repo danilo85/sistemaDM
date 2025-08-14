@@ -17,9 +17,21 @@ class Autor extends Model
         'user_id',
         'name',
         'email',
-        'contact', // Adicionei os campos da sua migration aqui
-        'bio',     // para garantir que estão corretos
+        'contact',
+        'bio',
         'is_complete',
+        'logo',
+        'cor',
+    ];
+
+    // Constantes para as cores disponíveis
+    const CORES_DISPONIVEIS = [
+        'blue' => 'Azul',
+        'green' => 'Verde',
+        'pink' => 'Rosa',
+        'yellow' => 'Amarelo',
+        'orange' => 'Laranja',
+        'white' => 'Branco',
     ];
     
     protected $casts = [

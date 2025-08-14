@@ -60,53 +60,64 @@
         <!--[if BLOCK]><![endif]--><?php $__empty_1 = true; $__currentLoopData = $clientes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cliente): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
             <?php
                 $cores = [
+                    'white' => 'bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-600',
                     'blue' => 'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-700',
                     'green' => 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-700',
                     'pink' => 'bg-pink-50 border-pink-200 dark:bg-pink-900/20 dark:border-pink-700',
                     'yellow' => 'bg-yellow-50 border-yellow-200 dark:bg-yellow-900/20 dark:border-yellow-700',
-                    'purple' => 'bg-purple-50 border-purple-200 dark:bg-purple-900/20 dark:border-purple-700',
                     'orange' => 'bg-orange-50 border-orange-200 dark:bg-orange-900/20 dark:border-orange-700'
                 ];
-                $corClasse = $cores[$cliente->cor] ?? $cores['blue'];
+                $corClasse = $cores[$cliente->cor] ?? $cores['white'];
             ?>
-            <div wire:key="<?php echo e($cliente->id); ?>" class="<?php echo e($corClasse); ?> rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+            <div wire:key="<?php echo e($cliente->id); ?>" class="<?php echo e($corClasse); ?> rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 hover:shadow-md transition-shadow duration-200">
                 
                 <div class="p-6 pb-4">
                     <div class="flex items-start justify-between mb-3">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white truncate flex-1">
-                            <a href="<?php echo e(route('clientes.show', $cliente)); ?>" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-                                <?php echo e($cliente->name); ?>
+                        <div class="flex items-center gap-3 flex-1 min-w-0">
+                            
+                            <div class="flex-shrink-0">
+                                <!--[if BLOCK]><![endif]--><?php if($cliente->logo): ?>
+                                    <img src="<?php echo e(asset('storage/' . $cliente->logo)); ?>" alt="Logo <?php echo e($cliente->name); ?>" class="w-12 h-12 rounded-full object-cover border-2 border-white dark:border-gray-600 shadow-sm">
+                                <?php else: ?>
+                                    <div class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center border-2 border-white dark:border-gray-600 shadow-sm">
+                                        <svg class="w-6 h-6 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg>
+                                    </div>
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                            </div>
+                            
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white truncate">
+                                <a href="<?php echo e(route('clientes.show', $cliente)); ?>" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                                    <?php echo e($cliente->name); ?>
 
-                            </a>
-                        </h3>
+                                </a>
+                            </h3>
+                        </div>
                         <div class="flex items-center gap-2 ml-2">
                             <!--[if BLOCK]><![endif]--><?php if(!$cliente->is_complete): ?>
                                 <span class="text-yellow-500" title="Cadastro Incompleto">⚠️</span>
                             <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                             
                             <div class="relative" x-data="{ open: false }">
-                                <button @click="open = !open" class="w-6 h-6 border-2 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-colors flex items-center justify-center" title="Alterar cor">
-                                    <svg class="w-3 h-3 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                                        <circle cx="12" cy="5" r="1.5"/>
-                                        <circle cx="12" cy="12" r="1.5"/>
-                                        <circle cx="12" cy="19" r="1.5"/>
+                                <button @click="open = !open" class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
                                     </svg>
                                 </button>
-                                <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 top-8 z-20 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-3 min-w-[140px]">
-                                    <div class="grid grid-cols-2 gap-2">
-                                        <!--[if BLOCK]><![endif]--><?php $__currentLoopData = ['blue', 'green', 'pink', 'yellow', 'purple', 'orange']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <?php
-                                                $corBotao = [
-                                                    'blue' => 'bg-blue-200 hover:bg-blue-300 border-blue-300',
-                                                    'green' => 'bg-green-200 hover:bg-green-300 border-green-300',
-                                                    'pink' => 'bg-pink-200 hover:bg-pink-300 border-pink-300',
-                                                    'yellow' => 'bg-yellow-200 hover:bg-yellow-300 border-yellow-300',
-                                                    'purple' => 'bg-purple-200 hover:bg-purple-300 border-purple-300',
-                                                    'orange' => 'bg-orange-200 hover:bg-orange-300 border-orange-300'
-                                                ];
-                                            ?>
-                                            <button wire:click="updateCor(<?php echo e($cliente->id); ?>, '<?php echo e($cor); ?>')" @click="open = false" class="w-8 h-8 rounded-full <?php echo e($corBotao[$cor]); ?> border-2 transition-all hover:scale-110 <?php echo e($cliente->cor === $cor ? 'ring-2 ring-gray-400 dark:ring-gray-300' : ''); ?>" title="<?php echo e(ucfirst($cor)); ?>"></button>
-                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                                <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 top-8 z-20 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 min-w-[120px]">
+                                    <div class="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-600">
+                                        Cores
+                                    </div>
+                                    <div class="p-2">
+                                        <div class="flex gap-1">
+                                            <button wire:click="updateCor(<?php echo e($cliente->id); ?>, 'white')" @click="open = false" class="w-6 h-6 rounded-full bg-white border border-gray-300 hover:scale-110 transition-transform <?php echo e($cliente->cor === 'white' ? 'ring-2 ring-gray-400 dark:ring-gray-300' : ''); ?>" title="Branco"></button>
+                                            <button wire:click="updateCor(<?php echo e($cliente->id); ?>, 'blue')" @click="open = false" class="w-6 h-6 rounded-full bg-blue-500 hover:scale-110 transition-transform <?php echo e($cliente->cor === 'blue' ? 'ring-2 ring-gray-400 dark:ring-gray-300' : ''); ?>" title="Azul"></button>
+                                            <button wire:click="updateCor(<?php echo e($cliente->id); ?>, 'green')" @click="open = false" class="w-6 h-6 rounded-full bg-green-500 hover:scale-110 transition-transform <?php echo e($cliente->cor === 'green' ? 'ring-2 ring-gray-400 dark:ring-gray-300' : ''); ?>" title="Verde"></button>
+                                            <button wire:click="updateCor(<?php echo e($cliente->id); ?>, 'yellow')" @click="open = false" class="w-6 h-6 rounded-full bg-yellow-500 hover:scale-110 transition-transform <?php echo e($cliente->cor === 'yellow' ? 'ring-2 ring-gray-400 dark:ring-gray-300' : ''); ?>" title="Amarelo"></button>
+                                            <button wire:click="updateCor(<?php echo e($cliente->id); ?>, 'pink')" @click="open = false" class="w-6 h-6 rounded-full bg-pink-500 hover:scale-110 transition-transform <?php echo e($cliente->cor === 'pink' ? 'ring-2 ring-gray-400 dark:ring-gray-300' : ''); ?>" title="Rosa"></button>
+                                            <button wire:click="updateCor(<?php echo e($cliente->id); ?>, 'orange')" @click="open = false" class="w-6 h-6 rounded-full bg-orange-500 hover:scale-110 transition-transform <?php echo e($cliente->cor === 'orange' ? 'ring-2 ring-gray-400 dark:ring-gray-300' : ''); ?>" title="Laranja"></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -150,22 +161,27 @@
                 
                 
                 <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 rounded-b-lg border-t border-gray-200 dark:border-gray-600">
-                    <div class="flex items-center justify-between gap-3">
-                        <a href="<?php echo e(route('clientes.edit', $cliente->id)); ?>" class="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-md transition-colors">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div class="flex items-center justify-center gap-4">
+                        <a href="<?php echo e(route('clientes.show', $cliente->id)); ?>" class="flex items-center justify-center p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-md transition-colors" title="Cliente 360">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </a>
+                        
+                        <a href="<?php echo e(route('clientes.edit', $cliente->id)); ?>" class="flex items-center justify-center p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-md transition-colors" title="Editar">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z" />
                             </svg>
-                            Editar
                         </a>
                         
                         <form method="POST" action="<?php echo e(route('clientes.destroy', $cliente->id)); ?>" onsubmit="return confirm('Tem certeza que deseja excluir este cliente?')" class="inline">
                             <?php echo csrf_field(); ?>
                             <?php echo method_field('DELETE'); ?>
-                            <button type="submit" class="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <button type="submit" class="flex items-center justify-center p-2 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors" title="Excluir">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                 </svg>
-                                Excluir
                             </button>
                         </form>
                     </div>

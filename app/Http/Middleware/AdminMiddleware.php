@@ -15,14 +15,14 @@ class AdminMiddleware
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
-{
-    // 1. O usuário está logado? E a 'role' dele é 'admin'?
-    if (Auth::check() && Auth::user()->role === 'admin') {
-        // 2. Se sim, pode seguir para a próxima etapa (acessar a página).
-        return $next($request);
-    }
+    {
+        // 1. O usuário está logado? E tem a role 'Admin'?
+        if (Auth::check() && Auth::user()->hasRole('Admin')) {
+            // 2. Se sim, pode seguir para a próxima etapa (acessar a página).
+            return $next($request);
+        }
 
-    // 3. Se não for admin, barre o acesso com uma página de erro "403 Acesso Proibido".
-    abort(403, 'ACESSO NEGADO');
-}
+        // 3. Se não for admin, barre o acesso com uma página de erro "403 Acesso Proibido".
+        abort(403, 'ACESSO NEGADO');
+    }
 }

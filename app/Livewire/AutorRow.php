@@ -19,6 +19,6 @@ class AutorRow extends Component
 
     public function render()
     {
-        return view('livewire.autor-row');
+        return view('livewire.autor.autor-row');
     }
 }

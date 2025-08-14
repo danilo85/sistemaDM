@@ -243,7 +243,7 @@
                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('acessar_financeiro')): ?>
                     <div class="relative">
                         <button @click="toggleDropdown('financeiro')" 
-                                class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center space-x-1 <?php echo e(request()->routeIs(['transacoes.*', 'categorias.*', 'bancos.*']) ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300'); ?>">
+                                class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center space-x-1 <?php echo e(request()->routeIs(['transacoes.*', 'categorias.*', 'bancos.*', 'cartoes.*']) ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300'); ?>">
                             <span>Financeiro</span>
                             <svg class="w-4 h-4 transition-transform duration-200" 
                                  :class="activeDropdown === 'financeiro' ? 'rotate-180' : ''" 
@@ -285,6 +285,14 @@
                                 </svg>
                                 Bancos
                             </a>
+                            
+                            <a href="<?php echo e(route('cartoes.index')); ?>" 
+                               class="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150">
+                                <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                </svg>
+                                Cartões
+                            </a>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -298,6 +306,16 @@
             
             
             <div class="flex items-center space-x-4">
+                
+                
+                <form method="POST" action="<?php echo e(route('logout')); ?>" class="inline">
+                    <?php echo csrf_field(); ?>
+                    <button type="submit" class="p-2 rounded-full bg-gradient-to-r from-red-500 to-pink-600 text-white hover:from-red-600 hover:to-pink-700 transform hover:scale-105 transition-all duration-200" title="Sair do Sistema">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                    </button>
+                </form>
                 
                 
                 <div class="relative">
@@ -518,6 +536,14 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
                             </svg>
                             Bancos
+                        </a>
+                        <a href="<?php echo e(route('cartoes.index')); ?>" 
+                           @click="closeMobileMenu()"
+                           class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+                            <svg class="w-4 h-4 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                            </svg>
+                            Cartões
                         </a>
                     </div>
                 </div>

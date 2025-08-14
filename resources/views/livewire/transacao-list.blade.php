@@ -1,17 +1,19 @@
-{{-- O padding inferior foi removido, pois o rodapé não é mais fixo --}}
-<div class="p-4 sm:p-6">
+{{-- Container único para evitar múltiplos elementos raiz --}}
+<div>
+    {{-- Container principal com padding inferior para o rodapé fixo --}}
+    <div class="p-4 sm:p-6 pb-32 md:pb-6">
     
     {{-- CABEÇALHO COM NAVEGAÇÃO E FILTROS --}}
     <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         
-        <div class="flex items-center justify-center">
+        <div class="flex items-center justify-center bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 p-4 rounded-lg shadow-sm">
             <a href="{{ route('transacoes.index', ['ano' => $dataAtual->copy()->subMonth()->year, 'mes' => $dataAtual->copy()->subMonth()->month]) }}"
-               class="p-2 text-gray-500 bg-white rounded-full hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 shadow-sm border dark:border-gray-700">
+               class="p-2 text-gray-500 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg shadow-md transition-all duration-200 transform hover:scale-105">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
             </a>
             
             <div class="flex items-center gap-2 mx-4">
-                <h3 class="text-xl font-semibold capitalize text-gray-800 dark:text-gray-200">
+                <h3 class="text-xl font-bold capitalize text-gray-800 dark:text-gray-200">
                     {{ $tituloDoMes }}
                 </h3>
                 <a href="{{ route('transacoes.index') }}" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300" title="Ir para o mês atual">
@@ -20,125 +22,171 @@
             </div>
 
             <a href="{{ route('transacoes.index', ['ano' => $dataAtual->copy()->addMonth()->year, 'mes' => $dataAtual->copy()->addMonth()->month]) }}"
-               class="p-2 text-gray-500 bg-white rounded-full hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 shadow-sm border dark:border-gray-700">
+               class="p-2 text-gray-500 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg shadow-md transition-all duration-200 transform hover:scale-105">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
             </a>
         </div>
 
-        <div class="flex items-center gap-2">
-            
-            {{-- FILTRO DE CONTAS COM DROPDOWN FLOWBITE (CORRIGIDO) --}}
-            <div x-data="{ open: false }" class="relative">
-                <button @click="open = !open" class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700" type="button" title="Filtrar por Conta">
-                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6h18M7 12h10M10 18h4"/>
-                    </svg>
-                </button>
-                <div x-show="open" @click.away="open = false" class="absolute right-0 z-10 w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700 mt-1" style="display: none;">
-                    <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Filtrar por Conta</h6>
-                    <ul class="space-y-1 text-sm">
-                        <li class="cursor-pointer">
-                            <label for="conta-todas" class="flex items-center w-full p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
-                                <input id="conta-todas" type="radio" value="" wire:model.live="filtroConta" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500">
-                                <span class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Todas as Contas</span>
-                            </label>
-                        </li>
-
-                        @if($bancos->isNotEmpty())
-                            <li>
-                                <h6 class="px-2 pt-2 text-xs font-bold text-gray-400 uppercase">Contas Bancárias</h6>
-                            </li>
-                            @foreach ($bancos as $banco)
-                            <li class="cursor-pointer">
-                                 <label for="banco-{{$banco->id}}" class="flex items-center w-full p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
-                                    <input id="banco-{{$banco->id}}" type="radio" value="Banco_{{ $banco->id }}" wire:model.live="filtroConta" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500">
-                                    <span class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $banco->nome }}</span>
-                                </label>
-                            </li>
-                            @endforeach
-                        @endif
-
-                        @if($cartoes->isNotEmpty())
-                            <li>
-                                <h6 class="px-2 pt-2 text-xs font-bold text-gray-400 uppercase">Cartões de Crédito</h6>
-                            </li>
-                            @foreach ($cartoes as $cartao)
-                            <li class="cursor-pointer">
-                                 <label for="cartao-{{$cartao->id}}" class="flex items-center w-full p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600">
-                                    <input id="cartao-{{$cartao->id}}" type="radio" value="CartaoCredito_{{ $cartao->id }}" wire:model.live="filtroConta" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500">
-                                    <span class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $cartao->nome }}</span>
-                                </label>
-                            </li>
-                            @endforeach
-                        @endif
-                    </ul>
+        <!-- Filtros -->
+        <div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 p-6 rounded-lg shadow-sm mb-6">
+            <div class="flex flex-col md:flex-row gap-4">
+                <!-- Filtro por conta -->
+                <div class="flex-1">
+                    <label for="conta_id" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        Filtrar por Conta
+                    </label>
+                    <select wire:model.live="contaSelecionada" id="conta_id" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 dark:focus:border-blue-500 focus:ring-blue-500 dark:focus:ring-blue-500 shadow-sm transition-all duration-200">
+                        <option value="">Todas as contas</option>
+                        @foreach($contas as $conta)
+                            <option value="{{ $conta->id }}">{{ $conta->nome }}</option>
+                        @endforeach
+                    </select>
                 </div>
-            </div>
 
-            <div x-data="{ searchOpen: $wire.get('busca') !== '' }" class="relative flex items-center h-10">
-                <div x-show="searchOpen" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-x-0" x-transition:enter-end="opacity-100 scale-x-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-x-100" x-transition:leave-end="opacity-0 scale-x-0" @click.away="if($wire.get('busca') === '') searchOpen = false" class="relative origin-right" style="display: none;">
-                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" /></svg>
-                    </div>
-                    <input x-ref="searchInput" type="text" wire:model.live.debounce.300ms="busca" placeholder="Buscar..." class="block w-full sm:w-80 rounded-lg border-transparent bg-gray-100 dark:bg-gray-800 pl-10 pr-10 shadow-sm focus:ring-2 focus:ring-blue-500">
-                    <div x-show="$wire.get('busca') !== ''" x-transition class="absolute inset-y-0 right-0 flex items-center pr-3">
-                        <button wire:click="$set('busca', '')" @click="if($wire.get('busca') === '') searchOpen = false" type="button" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                        </button>
-                    </div>
+                <!-- Campo de busca -->
+                <div class="flex-1">
+                    <label for="busca" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        Buscar transação
+                    </label>
+                    <input wire:model.live.debounce.300ms="busca" type="text" id="busca" placeholder="Digite para buscar..." class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 dark:focus:border-blue-500 focus:ring-blue-500 dark:focus:ring-blue-500 shadow-sm transition-all duration-200">
                 </div>
-                <button x-show="!searchOpen" @click="searchOpen = true; $nextTick(() => $refs.searchInput.focus())" type="button" class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
-                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" /></svg>
-                </button>
             </div>
         </div>
     </div>
     
-    <div class="relative overflow-x-auto">
-        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th scope="col" class="px-6 py-3">Data</th>
-                    <th scope="col" class="px-6 py-3">Descrição</th>
-                    <th scope="col" class="px-6 py-3">Categoria</th>
-                    <th scope="col" class="px-6 py-3 text-right">Valor</th>
-                    <th scope="col" class="px-6 py-3 text-center">Status</th>
-                    <th scope="col" class="px-6 py-3 text-right">Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($lancamentos as $lancamento)
-                    @if ($lancamento->is_fatura ?? false)
-                        @livewire('credit-card-summary', ['fatura' => $lancamento], key('fatura-' . $lancamento->cartao->id))
-                    @else
-                        @livewire('transacao-item', ['transacao' => $lancamento], key('transacao-' . $lancamento->id))
-                    @endif
-                @empty
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <td colspan="6" class="px-6 py-4 text-center">
-                            Nenhum lançamento financeiro encontrado para este mês.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+    {{-- Cards de Lançamentos --}}
+    <div class="space-y-4 pb-32 md:pb-16">
+        @forelse ($lancamentos as $lancamento)
+            @if ($lancamento->is_fatura ?? false)
+                @livewire('credit-card-summary', ['fatura' => $lancamento], key('fatura-' . $lancamento->cartao->id))
+            @else
+                @livewire('transacao-item', ['transacao' => $lancamento], key('transacao-' . $lancamento->id))
+            @endif
+        @empty
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-8 text-center">
+                <div class="flex flex-col items-center justify-center">
+                    <svg class="w-16 h-16 text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Nenhum lançamento encontrado</h3>
+                    <p class="text-gray-500 dark:text-gray-400">Não há lançamentos financeiros para este mês.</p>
+                </div>
+            </div>
+        @endforelse
     </div>
 
-    {{-- Resumo Financeiro do Mês (NÃO-FIXO) --}}
-    <div class="mt-8 grid grid-cols-1 gap-4 border-t border-gray-200 pt-6 text-center dark:border-gray-700 md:grid-cols-3">
-        <div class="rounded-lg bg-green-50 p-4 dark:bg-green-900/50">
-            <span class="block text-sm text-green-800 dark:text-green-300">Receitas do Mês</span>
-            <span class="text-2xl font-bold text-green-600 dark:text-green-400 whitespace-nowrap">R$ {{ number_format($totalReceitas, 2, ',', '.') }}</span>
-        </div>
-        <div class="rounded-lg bg-red-50 p-4 dark:bg-red-900/50">
-            <span class="block text-sm text-red-800 dark:text-red-300">Despesas do Mês</span>
-            <span class="text-2xl font-bold text-red-600 dark:text-red-400 whitespace-nowrap">R$ {{ number_format($totalDespesas, 2, ',', '.') }}</span>
-        </div>
-        <div class="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/50">
-            <span class="block text-sm text-blue-800 dark:text-blue-300">Saldo do Mês</span>
-            <span class="text-2xl font-bold {{ $saldoDoMes >= 0 ? 'text-blue-600 dark:text-blue-400' : 'text-orange-500' }} whitespace-nowrap">
-                R$ {{ number_format($saldoDoMes, 2, ',', '.') }}
-            </span>
+
+
+    {{-- Resumo Financeiro Mobile (Card) --}}
+    <div class="mt-8 md:hidden">
+        <div class="bg-gradient-to-br from-gray-700 to-gray-800 p-6 rounded-lg shadow-lg">
+            <h4 class="text-lg font-bold mb-4 text-white text-center">Resumo Financeiro</h4>
+            <div class="space-y-4">
+                <!-- Receitas Mobile -->
+                <div class="flex items-center justify-between bg-white/10 p-4 rounded-lg">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-green-500 p-2 rounded-full">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
+                            </svg>
+                        </div>
+                        <span class="text-white/80 text-sm font-medium">Receitas</span>
+                    </div>
+                    <span class="text-white font-bold">R$ {{ number_format($totalReceitas, 2, ',', '.') }}</span>
+                </div>
+                
+                <!-- Despesas Mobile -->
+                <div class="flex items-center justify-between bg-white/10 p-4 rounded-lg">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-red-500 p-2 rounded-full">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path>
+                            </svg>
+                        </div>
+                        <span class="text-white/80 text-sm font-medium">Despesas</span>
+                    </div>
+                    <span class="text-white font-bold">R$ {{ number_format($totalDespesas, 2, ',', '.') }}</span>
+                </div>
+                
+                <!-- Saldo Mobile -->
+                <div class="flex items-center justify-between bg-white/10 p-4 rounded-lg">
+                    <div class="flex items-center gap-3">
+                        <div class="{{ $saldoDoMes >= 0 ? 'bg-blue-500' : 'bg-orange-500' }} p-2 rounded-full">
+                            @if($saldoDoMes >= 0)
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                </svg>
+                            @else
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                </svg>
+                            @endif
+                        </div>
+                        <span class="text-white/80 text-sm font-medium">Saldo</span>
+                    </div>
+                    <span class="text-white font-bold">R$ {{ number_format($saldoDoMes, 2, ',', '.') }}</span>
+                </div>
+            </div>
         </div>
     </div>
+
+    {{-- Rodapé Fixo Desktop com Resumo Financeiro --}}
+<div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-lg z-50 hidden md:block">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="grid grid-cols-3 gap-6">
+            <!-- Receitas Rodapé -->
+            <div class="bg-gradient-to-br from-green-500 to-green-600 p-4 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl transform hover:scale-[1.02]">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-white/80 uppercase tracking-wide">Receitas</p>
+                        <p class="text-lg font-bold text-white mt-1">R$ {{ number_format($totalReceitas, 2, ',', '.') }}</p>
+                    </div>
+                    <div class="bg-white/20 p-2 rounded-full">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Despesas Rodapé -->
+            <div class="bg-gradient-to-br from-red-500 to-red-600 p-4 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl transform hover:scale-[1.02]">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-white/80 uppercase tracking-wide">Despesas</p>
+                        <p class="text-lg font-bold text-white mt-1">R$ {{ number_format($totalDespesas, 2, ',', '.') }}</p>
+                    </div>
+                    <div class="bg-white/20 p-2 rounded-full">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Saldo Rodapé -->
+            <div class="bg-gradient-to-br {{ $saldoDoMes >= 0 ? 'from-blue-500 to-blue-600' : 'from-orange-500 to-orange-600' }} p-4 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl transform hover:scale-[1.02]">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-white/80 uppercase tracking-wide">Saldo do Mês</p>
+                        <p class="text-lg font-bold text-white mt-1">
+                            R$ {{ number_format($saldoDoMes, 2, ',', '.') }}
+                        </p>
+                    </div>
+                    <div class="bg-white/20 p-2 rounded-full">
+                        @if($saldoDoMes >= 0)
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                            </svg>
+                        @else
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                            </svg>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
